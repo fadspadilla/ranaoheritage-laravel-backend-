@@ -14,8 +14,11 @@ Route::post('login', [AuthController::class, 'login']);
 //Private Routes
 Route::middleware('auth:sanctum')->group(function () {    
     Route::post('logout', [AuthController::class, 'logout']);
+    Route::get('auth-user', [AuthController::class, 'user']);
+    Route::put('auth-user/name/{id}', [AuthController::class, 'updateName']);
+    Route::put('auth-user/username/{id}', [AuthController::class, 'updateUsername']);
+    Route::put('auth-user/password/{id}', [AuthController::class, 'updatePassword']);
 
-    Route::resource('auth-user', UserController::class);
-    Route::put('auth-user/username/{id}', [UserController::class, 'updateUsername']);
+    Route::resource('auth-user', UserController::class);    
 });
  

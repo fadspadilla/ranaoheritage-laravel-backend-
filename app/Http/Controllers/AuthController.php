@@ -91,4 +91,107 @@ class AuthController extends Controller
     {
         return Auth::user();
     }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    
+    public function updateName(Request $request, $id)
+    {
+        //validate the data received from request
+        $validator = Validator::make($request->all(), [
+            'firstname'  =>  'required',
+            'lastname'  =>  'required',
+        ]);
+
+        if($validator->fails()){
+            return response()->json([
+                'status' => 422,
+                'validation_errors' => $validator->messages(),
+            ]);
+        }else{
+            $user = User::find($id);
+            if($user){
+                $user->firstname = $request->firstname;
+                $user->lastname = $request->lastname;            
+                
+                $user->save();
+                return response()->json([
+                    'status' => 200,
+                    'message' => 'Update Successfully'
+                ]);
+            }else{
+                return response()->json([
+                    'status' => 404,
+                    'message' => 'Not Found'
+                ]);
+            }    
+        }
+    }
+
+    //naka separate and username sa pag-update ky dapat unique siya
+    public function updateUsername(Request $request, $id)
+    {
+        //validate the data received from request
+        $validator = Validator::make($request->all(), [
+            'username'  =>  'required|unique:users,username',
+        ]);
+
+        if($validator->fails()){
+            return response()->json([
+                'status' => 422,
+                'validation_errors' => $validator->messages(),
+            ]);
+        }else{
+            $user = User::find($id);
+            if($user){
+                $user->username = $request->username;           
+                
+                $user->save();
+                return response()->json([
+                    'status' => 200,
+                    'message' => 'Update Successfully'
+                ]);
+            }else{
+                return response()->json([
+                    'status' => 404,
+                    'message' => 'Not Found'
+                ]);
+            }    
+        }
+    }
+
+    public function updatePassword(Request $request, $id){
+        //validate the data received from request
+        $validator = Validator::make($request->all(), [
+            'password'  => 'required|min:8|confirmed',
+        ]);
+
+        if($validator->fails()){
+            return response()->json([
+                'status' => 422,
+                'validation_errors' => $validator->messages(),
+            ]);
+        }else{
+            $user = User::find($id);
+            if($user){
+                $user->password = bcrypt($request->password);               
+                
+                $user->save();
+                return response()->json([
+                    'status' => 200,
+                    'message' => 'Update Successfully'
+                ]);
+            }else{
+                return response()->json([
+                    'status' => 404,
+                    'message' => 'Not Found'
+                ]);
+            }    
+        }
+    }
 }
