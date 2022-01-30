@@ -89,7 +89,21 @@ class AuthController extends Controller
 
     public function user()
     {
-        return Auth::user();
+        $authUser = Auth::user();
+
+        if($authUser){
+            return response()->json([
+                'status' => 200,
+                'auth_user' => $authUser,
+            ]);
+        }else{
+            return response()->json([
+                'status' => 404,
+                'message' => 'Not Found',
+            ]);
+        }
+
+        // return Auth::user();
     }
 
     /**

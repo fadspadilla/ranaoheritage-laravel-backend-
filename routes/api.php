@@ -19,6 +19,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('auth-user/username/{id}', [AuthController::class, 'updateUsername']);
     Route::put('auth-user/password/{id}', [AuthController::class, 'updatePassword']);
 
-    Route::resource('auth-user', UserController::class);    
+    Route::resource('user', UserController::class);    
 });
  

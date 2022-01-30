@@ -46,7 +46,7 @@ class UserController extends Controller
         if($user){
             return response()->json([
                 'status' => 200,
-                'category' => $user
+                'user' => $user
             ]);
         }else{
             return response()->json([
