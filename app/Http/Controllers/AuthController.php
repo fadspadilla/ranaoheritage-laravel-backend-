@@ -17,8 +17,8 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'firstname'  =>  'required',
             'lastname'  =>  'required',
-            'username'  =>  'required|unique:users,username',
-            'password'  => 'required|min:8|confirmed',
+            'username'  =>  'required|max:15|unique:users,username',
+            'password'  => 'required|min:8|max:20|confirmed',
         ]);
 
         if($validator->fails()){
@@ -47,8 +47,8 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'username'  =>  'required|max:191',
-            'password'  => 'required|min:8',
+            'username'  =>  'required|max:15',
+            'password'  => 'required|min:8|max:20',
         ]);
 
         if($validator->fails()){
@@ -182,7 +182,7 @@ class AuthController extends Controller
     public function updatePassword(Request $request, $id){
         //validate the data received from request
         $validator = Validator::make($request->all(), [
-            'password'  => 'required|min:8|confirmed',
+            'password'  => 'required|min:8|max:20|confirmed',
         ]);
 
         if($validator->fails()){
