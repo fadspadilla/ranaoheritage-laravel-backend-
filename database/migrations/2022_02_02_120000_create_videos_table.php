@@ -15,6 +15,13 @@ class CreateVideosTable extends Migration
     {
         Schema::create('videos', function (Blueprint $table) {
             $table->id();
+            $table->string('path');
+
+            $table->unsignedBigInteger('heritage_id');
+            $table->foreign('heritage_id')->references('id')->on('heritages')
+                  ->onUpdate('cascade')
+                  ->onDelete('cascade');
+                  
             $table->timestamps();
         });
     }
