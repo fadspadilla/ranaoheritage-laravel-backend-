@@ -102,18 +102,8 @@ class AuthController extends Controller
                 'message' => 'Not Found',
             ]);
         }
-
-        // return Auth::user();
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    
     public function updateName(Request $request, $id)
     {
         //validate the data received from request
