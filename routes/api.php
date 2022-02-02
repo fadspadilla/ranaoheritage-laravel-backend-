@@ -11,6 +11,7 @@ use App\Http\Controllers\IconsController;
 use App\Http\Controllers\MunicipalitiesController;
 use App\Http\Controllers\LocationsController;
 use App\Http\Controllers\AddressesController;
+use App\Http\Controllers\HeritagesController;
 
 //Public Routes
 Route::post('register', [AuthController::class, 'register']);
@@ -46,6 +47,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //Address
     Route::resource('addresses', AddressesController::class);
+
+    //Heritage
+    Route::resource('heritages', HeritagesController::class);
 
 
     // Route::resource('user', UserController::class);    
