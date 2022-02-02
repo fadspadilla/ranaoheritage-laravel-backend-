@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 //Custom Controllers
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\UserController;
 
 //Public Routes
@@ -19,6 +20,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('auth-user/username/{id}', [AuthController::class, 'updateUsername']);
     Route::put('auth-user/password/{id}', [AuthController::class, 'updatePassword']);
 
-    Route::resource('user', UserController::class);    
+    //categories
+    Route::resource('categories', CategoriesController::class);
+    // Route::post('categories', [CategoriesController::class, 'store']);
+    // Route::get('categories', [CategoriesController::class, 'index']);
+    // Route::get('categories/${id}', [CategoriesController::class, 'show']);
+    //** end of categories */
+    
+    // Route::resource('user', UserController::class);    
 });
  
