@@ -4,8 +4,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 //Custom Controllers
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\CategoriesController;
+use App\Http\Controllers\ProvincesController;
 
 //Public Routes
 Route::post('register', [AuthController::class, 'register']);
@@ -26,6 +27,9 @@ Route::middleware('auth:sanctum')->group(function () {
     // Route::get('categories', [CategoriesController::class, 'index']);
     // Route::get('categories/${id}', [CategoriesController::class, 'show']);
     //** end of categories */
+
+    //provinces
+    Route::resource('provinces', ProvincesController::class);
     
     // Route::resource('user', UserController::class);    
 });
