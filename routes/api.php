@@ -9,6 +9,7 @@ use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\ProvincesController;
 use App\Http\Controllers\IconsController;
 use App\Http\Controllers\MunicipalitiesController;
+use App\Http\Controllers\LocationsController;
 
 //Public Routes
 Route::post('register', [AuthController::class, 'register']);
@@ -39,6 +40,10 @@ Route::middleware('auth:sanctum')->group(function () {
     //Municipalities
     Route::resource('municipalities', MunicipalitiesController::class);
     
+    //Locations
+    Route::resource('locations', LocationsController::class);
+
+
     // Route::resource('user', UserController::class);    
 });
  
