@@ -2,22 +2,22 @@
 
 namespace App\Http\Controllers;
 
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use App\Models\Category;
+use App\Models\Municipality;
 
-class CategoriesController extends Controller
+class MunicipalitiesController extends Controller
 {
     public function index()
     {
-        return Category::all();
+        return Municipality::all();
     }
 
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required'
+            'name' => 'required',
+            'prov_id' => 'required'
         ]);
 
         if($validator->fails())
@@ -29,43 +29,44 @@ class CategoriesController extends Controller
         }
         else{
 
-            $category = Category::create($request->all()); //by traversy
+            $municipality = Municipality::create($request->all()); //by traversy
         
             return response()->json([
                 'status' => 200,
-                'category' => $category,
-                'message' => 'Category Added Successfully',
+                'municipality' => $municipality,
+                'message' => 'Municipality Added Successfully',
             ]);
-        }        
+        }   
     }
 
-    public function show ($id)
+    public function show($id)
     {
-        $category = Category::find($id);
+        $municipality = Municipality::find($id);
 
-        if($category)
+        if($municipality)
         {
             return response()->json([
                 'status' => 200,
-                'category' => $category,
+                'municipality' => $municipality,
             ]);
         }
         else
         {
             return response()->json([
                 'status' => 404,
-                'message' => 'Category Not Found',
+                'message' => 'Municipality Not Found',
             ]);
         }
     }
 
-    public function update (Request $request, $id)
+    public function update(Request $request, $id)
     {
-        $category = Category::find($id);
+        $municipality = Municipality::find($id);
 
-        if($category){
+        if($municipality){
             $validator = Validator::make($request->all(), [
-                'name' => 'required'
+                'name' => 'required',
+                'prov_id' => 'required',
             ]);
     
             if($validator->fails())
@@ -77,12 +78,12 @@ class CategoriesController extends Controller
             }
             else
             {
-                $category->update($request->all()); //by traversy
+                $municipality->update($request->all()); //by traversy
 
                 return response()->json([
                     'status' => 200,
-                    'category' => $category,
-                    'message' => 'Category Updated Successfully',
+                    'municipality' => $municipality,
+                    'message' => 'Municipality Updated Successfully',
                 ]);
             }
         }
@@ -90,28 +91,28 @@ class CategoriesController extends Controller
         {
             return response()->json([
                 'status' => 404,
-                'message' => 'Category Not Found',
+                'message' => 'Municipality Not Found',
             ]);
         }
     }
 
     public function destroy($id)
     {
-        $category = Category::find($id);
+        $municipality = Municipality::find($id);
 
-        if($category){
-            Category::destroy($id);
+        if($municipality){
+            Municipality::destroy($id);
 
             return response()->json([
                 'status' => 200,
-                'message' => 'Category Deleted Successfully',
+                'message' => 'Municipality Deleted Successfully',
             ]);
         }
         else
         {
             return response()->json([
                 'status' => 404,
-                'message' => 'Category Not Found',
+                'message' => 'Municipality Not Found',
             ]);
         }
     }
