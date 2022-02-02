@@ -4,21 +4,21 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use App\Models\Location;
+use App\Models\Address;
 
-class LocationsController extends Controller
+class AddressesController extends Controller
 {
     public function index()
     {
-        return Location::all();
+        return Address::all();
     }
 
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'longitude' => 'required',            
-            'latitude' => 'required',            
-            'icon_id' => 'required'
+            'address' => 'required',            
+            'mun_id' => 'required',            
+            'loc_id' => 'required'
         ]);
 
         if($validator->fails())
@@ -30,45 +30,45 @@ class LocationsController extends Controller
         }
         else{
 
-            $location = Location::create($request->all()); //by traversy
+            $address = Address::create($request->all()); //by traversy
         
             return response()->json([
                 'status' => 200,
-                'location' => $location,
-                'message' => 'Location Added Successfully',
+                'address' => $address,
+                'message' => 'Address Added Successfully',
             ]);
-        }  
+        } 
     }
 
     public function show($id)
     {
-        $location = Location::find($id);
+        $address = Address::find($id);
 
-        if($location)
+        if($address)
         {
             return response()->json([
                 'status' => 200,
-                'location' => $location,
+                'address' => $address,
             ]);
         }
         else
         {
             return response()->json([
                 'status' => 404,
-                'message' => 'Location Not Found',
+                'message' => 'Address Not Found',
             ]);
         }
     }
 
     public function update(Request $request, $id)
     {
-        $location = Location::find($id);
+        $address = Address::find($id);
 
-        if($location){
+        if($address){
             $validator = Validator::make($request->all(), [
-                'longitude' => 'required',            
-                'latitude' => 'required',            
-                'icon_id' => 'required'
+                'address' => 'required',            
+                'mun_id' => 'required',            
+                'loc_id' => 'required'
             ]);
     
             if($validator->fails())
@@ -80,12 +80,12 @@ class LocationsController extends Controller
             }
             else
             {
-                $location->update($request->all()); //by traversy
+                $address->update($request->all()); //by traversy
 
                 return response()->json([
                     'status' => 200,
-                    'location' => $location,
-                    'message' => 'Location Updated Successfully',
+                    'address' => $address,
+                    'message' => 'Address Updated Successfully',
                 ]);
             }
         }
@@ -93,28 +93,28 @@ class LocationsController extends Controller
         {
             return response()->json([
                 'status' => 404,
-                'message' => 'Location Not Found',
+                'message' => 'Address Not Found',
             ]);
         }
     }
 
     public function destroy($id)
     {
-        $location = Location::find($id);
+        $address = Address::find($id);
 
-        if($location){
-            Location::destroy($id);
+        if($address){
+            Address::destroy($id);
 
             return response()->json([
                 'status' => 200,
-                'message' => 'Location Deleted Successfully',
+                'message' => 'Address Deleted Successfully',
             ]);
         }
         else
         {
             return response()->json([
                 'status' => 404,
-                'message' => 'Location Not Found',
+                'message' => 'Address Not Found',
             ]);
         }
     }
