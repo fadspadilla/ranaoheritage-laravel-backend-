@@ -4,19 +4,20 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use App\Models\Province;
+use App\Models\Icon;
 
-class ProvincesController extends Controller
+class IconsController extends Controller
 {
     public function index()
     {
-        return Province::all();
+        return Icon::all();
     }
 
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required'
+            'name' => 'required',
+            'link' => 'required',
         ]);
 
         if($validator->fails())
@@ -28,43 +29,44 @@ class ProvincesController extends Controller
         }
         else{
 
-            $province = Province::create($request->all()); //by traversy
+            $icon = Icon::create($request->all()); //by traversy
         
             return response()->json([
                 'status' => 200,
-                'province' => $province,
-                'message' => 'Province Added Successfully',
+                'icon' => $icon,
+                'message' => 'Icon Added Successfully',
             ]);
-        }    
+        }
     }
 
     public function show($id)
     {
-        $province = Province::find($id);
+        $icon = Icon::find($id);
 
-        if($province)
+        if($icon)
         {
             return response()->json([
                 'status' => 200,
-                'province' => $province,
+                'icon' => $icon,
             ]);
         }
         else
         {
             return response()->json([
                 'status' => 404,
-                'message' => 'Province Not Found',
+                'message' => 'Icon Not Found',
             ]);
         }
     }
 
     public function update(Request $request, $id)
     {
-        $province = Province::find($id);
+        $icon = Icon::find($id);
 
-        if($province){
+        if($icon){
             $validator = Validator::make($request->all(), [
-                'name' => 'required'
+                'name' => 'required',
+                'link' => 'required',
             ]);
     
             if($validator->fails())
@@ -76,12 +78,12 @@ class ProvincesController extends Controller
             }
             else
             {
-                $province->update($request->all()); //by traversy
+                $icon->update($request->all()); //by traversy
 
                 return response()->json([
                     'status' => 200,
-                    'province' => $province,
-                    'message' => 'Province Added Successfully',
+                    'icon' => $icon,
+                    'message' => 'Icon Updated Successfully',
                 ]);
             }
         }
@@ -89,28 +91,34 @@ class ProvincesController extends Controller
         {
             return response()->json([
                 'status' => 404,
-                'message' => 'Province Not Found',
+                'message' => 'Icon Not Found',
             ]);
         }
     }
 
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
     public function destroy($id)
     {
-        $province = Province::find($id);
+        $icon = Icon::find($id);
 
-        if($province){
-            Province::destroy($id);
+        if($icon){
+            Icon::destroy($id);
 
             return response()->json([
                 'status' => 200,
-                'message' => 'Province Deleted Successfully',
+                'message' => 'Icon Deleted Successfully',
             ]);
         }
         else
         {
             return response()->json([
                 'status' => 404,
-                'message' => 'Province Not Found',
+                'message' => 'Icon Not Found',
             ]);
         }
     }

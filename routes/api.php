@@ -7,6 +7,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\ProvincesController;
+use App\Http\Controllers\IconsController;
 
 //Public Routes
 Route::post('register', [AuthController::class, 'register']);
@@ -30,6 +31,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //provinces
     Route::resource('provinces', ProvincesController::class);
+
+    //icons
+    Route::resource('icons', IconsController::class);
     
     // Route::resource('user', UserController::class);    
 });
