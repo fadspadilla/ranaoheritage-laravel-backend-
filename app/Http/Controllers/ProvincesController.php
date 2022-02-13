@@ -10,7 +10,11 @@ class ProvincesController extends Controller
 {
     public function index()
     {
-        return Province::all();
+        $provinces = Province::all();
+        return response()->json([
+            'status' => 200,
+            'provinces' => $provinces,
+        ]);
     }
 
     public function store(Request $request)

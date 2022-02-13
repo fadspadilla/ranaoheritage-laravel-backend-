@@ -11,7 +11,11 @@ class CategoriesController extends Controller
 {
     public function index()
     {
-        return Category::all();
+        $categories = Category::all();
+        return response()->json([
+            'status' => 200,
+            'categories' => $categories,
+        ]);
     }
 
     public function store(Request $request)

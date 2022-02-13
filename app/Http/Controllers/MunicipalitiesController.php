@@ -4,13 +4,41 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 use App\Models\Municipality;
+
 
 class MunicipalitiesController extends Controller
 {
     public function index()
     {
-        return Municipality::all();
+        $municipality = Municipality::all();
+        return response()->json([
+            'status' => 200,
+            'municipality' => $municipality,
+        ]);
+    }
+
+    public function munInProv($prov_id)
+    {
+        //$users = DB::table('users')->where('votes', '=', 100)->get();
+        //pdfFile::where('user_id', $request->user_id)->get();
+        $municipality::where('prov_id', $request->prov_id)->get();        
+
+        if($municipality)
+        {
+            return response()->json([
+                'status' => 200,
+                'municipality' => $municipality,
+            ]);
+        }
+        else
+        {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Municipality Not Found',
+            ]);
+        }
     }
 
     public function store(Request $request)
