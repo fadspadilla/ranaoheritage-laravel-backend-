@@ -43,7 +43,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //Municipalities
     Route::resource('municipalities', MunicipalitiesController::class);
-    Route::get('municipalities/mun-in-prov/${id}', [ MunicipalitiesController::class, 'munInProv']);
+    Route::get('municipalities/mun-in-prov/{id}', [ MunicipalitiesController::class, 'munInProv']);
 
     //Locations
     Route::resource('locations', LocationsController::class);

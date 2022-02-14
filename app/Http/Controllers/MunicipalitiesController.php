@@ -19,11 +19,9 @@ class MunicipalitiesController extends Controller
         ]);
     }
 
-    public function munInProv($prov_id)
+    public function munInProv($id)
     {
-        //$users = DB::table('users')->where('votes', '=', 100)->get();
-        //pdfFile::where('user_id', $request->user_id)->get();
-        $municipality::where('prov_id', $request->prov_id)->get();        
+        $municipality = Municipality::where('prov_id', $id)->get();        
 
         if($municipality)
         {
