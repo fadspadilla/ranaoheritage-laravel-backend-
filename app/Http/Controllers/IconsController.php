@@ -16,24 +16,31 @@ class IconsController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'link' => 'required',
+            'name' => 'required|max:191',
+            'link' => 'required|image|mimes:png,svg|max:2048',
         ]);
 
         if($validator->fails())
         {
             return response()->json([
-                'status' => 400,
+                'status' => 422,
                 'errors' => $validator->messages(),
             ]);
         }
         else{
+            $icon = new Icon;
+            $icon->name = $request->input('name');
+            if($request->hasFile('link')){
+                $file = $request->file('link');
+                $extension = $file->getClientOriginalExtension();
+                $filename = time() .'.'.$extension;
+                $file->move('uploads/icons/', $filename);
+                $icon->link = 'uploads/icons/'.$filename;
+            }
+            $icon->save();
 
-            $icon = Icon::create($request->all()); //by traversy
-        
             return response()->json([
                 'status' => 200,
-                'icon' => $icon,
                 'message' => 'Icon Added Successfully',
             ]);
         }

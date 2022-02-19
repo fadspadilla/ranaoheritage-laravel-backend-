@@ -16,24 +16,35 @@ class ImagesController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'path' => 'required',            
+            'path.*' => 'required|image|mimes:jpeg,jpg,bmp,gif,png,svg',            
             'heritage_id' => 'required',   
-        ]);
+        ]);        
 
         if($validator->fails())
         {
             return response()->json([
-                'status' => 400,
+                'status' => 422,
                 'errors' => $validator->messages(),
             ]);
         }
         else{
+            if($request->hasFile('path')){   
+                $images = $request->file('path');
 
-            $image = Image::create($request->all()); //by traversy
+                foreach($images as $file){                    
+                    $imgname = time() .'.'.$file->getClientOriginalExtension();
+                    $file->move('uploads/images/', $imgname);
+
+                    //store image file into directory and database
+                    $image = new Image();
+                    $image->heritage_id = $request->input('heritage_id');
+                    $image->path = 'uploads/images/'.$imgname;
+                    $image->save();
+                }
+            }
         
             return response()->json([
                 'status' => 200,
-                'image' => $image,
                 'message' => 'Image Added Successfully',
             ]);
         } 
@@ -57,44 +68,7 @@ class ImagesController extends Controller
                 'message' => 'Image Not Found',
             ]);
         }
-    }
-
-    public function update(Request $request, $id)
-    {
-        $image = Image::find($id);
-
-        if($image){
-            $validator = Validator::make($request->all(), [
-                'path' => 'required',            
-                'heritage_id' => 'required',
-            ]);
-    
-            if($validator->fails())
-            {
-                return response()->json([
-                    'status' => 400,
-                    'errors' => $validator->messages(),
-                ]);
-            }
-            else
-            {
-                $image->update($request->all()); //by traversy
-
-                return response()->json([
-                    'status' => 200,
-                    'image' => $image,
-                    'message' => 'Image Updated Successfully',
-                ]);
-            }
-        }
-        else
-        {
-            return response()->json([
-                'status' => 404,
-                'message' => 'Image Not Found',
-            ]);
-        }
-    }
+    }    
 
     public function destroy($id)
     {
