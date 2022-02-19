@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\File; 
 use App\Models\Video;
 
 class VideosController extends Controller
@@ -16,24 +17,36 @@ class VideosController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'path' => 'required',            
+            'path.*' => 'required|mimes:mp4,3gp,ogx,oga,ogv,ogg,webm,ts,mkv',          
             'heritage_id' => 'required',   
         ]);
 
         if($validator->fails())
         {
             return response()->json([
-                'status' => 400,
+                'status' => 422,
                 'errors' => $validator->messages(),
             ]);
         }
         else{
 
-            $video = Video::create($request->all()); //by traversy
+            if($request->hasFile('path')){   
+                $videos = $request->file('path');
+
+                foreach($videos as $file){                    
+                    $vidname = rand().'_'.time() .'.'.$file->getClientOriginalExtension();
+                    $file->move('uploads/videos/', $vidname);
+
+                    //store Video file into directory and database
+                    $video = new Video();
+                    $video->heritage_id = $request->input('heritage_id');
+                    $video->path = 'uploads/videos/'.$vidname;
+                    $video->save();
+                }
+            }
         
             return response()->json([
                 'status' => 200,
-                'video' => $video,
                 'message' => 'Video Added Successfully',
             ]);
         } 
@@ -57,50 +70,14 @@ class VideosController extends Controller
                 'message' => 'Video Not Found',
             ]);
         }
-    }
-
-    public function update(Request $request, $id)
-    {
-        $video = Video::find($id);
-
-        if($video){
-            $validator = Validator::make($request->all(), [
-                'path' => 'required',            
-                'heritage_id' => 'required',
-            ]);
-    
-            if($validator->fails())
-            {
-                return response()->json([
-                    'status' => 400,
-                    'errors' => $validator->messages(),
-                ]);
-            }
-            else
-            {
-                $video->update($request->all()); //by traversy
-
-                return response()->json([
-                    'status' => 200,
-                    'video' => $video,
-                    'message' => 'Video Updated Successfully',
-                ]);
-            }
-        }
-        else
-        {
-            return response()->json([
-                'status' => 404,
-                'message' => 'Video Not Found',
-            ]);
-        }
-    }
+    }    
 
     public function destroy($id)
     {
         $video = Video::find($id);
 
         if($video){
+            File::delete($video->path);
             Video::destroy($id);
 
             return response()->json([

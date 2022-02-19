@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\File; 
 use App\Models\Image;
 
 class ImagesController extends Controller
@@ -32,7 +33,7 @@ class ImagesController extends Controller
                 $images = $request->file('path');
 
                 foreach($images as $file){                    
-                    $imgname = time() .'.'.$file->getClientOriginalExtension();
+                    $imgname = rand().'_'.time() .'.'.$file->getClientOriginalExtension();
                     $file->move('uploads/images/', $imgname);
 
                     //store image file into directory and database
@@ -75,6 +76,7 @@ class ImagesController extends Controller
         $image = Image::find($id);
 
         if($image){
+            File::delete($image->path);
             Image::destroy($id);
 
             return response()->json([
