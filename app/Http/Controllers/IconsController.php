@@ -10,7 +10,11 @@ class IconsController extends Controller
 {
     public function index()
     {
-        return Icon::all();
+        $icons = Icon::all();
+        return response()->json([
+            'status' => 200,
+            'icons' => $icons,
+        ]);
     }
 
     public function store(Request $request)
@@ -33,7 +37,7 @@ class IconsController extends Controller
             if($request->hasFile('link')){
                 $file = $request->file('link');
                 $extension = $file->getClientOriginalExtension();
-                $filename = time() .'.'.$extension;
+                $filename = rand().'_'.time() .'.'.$extension;
                 $file->move('uploads/icons/', $filename);
                 $icon->link = 'uploads/icons/'.$filename;
             }
