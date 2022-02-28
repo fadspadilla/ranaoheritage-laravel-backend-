@@ -4,13 +4,23 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 use App\Models\Heritage;
 
 class HeritagesController extends Controller
 {
     public function index()
-    {
-        return Heritage::all();
+    {        
+        $heritage = DB::table('heritages')
+                ->join('categories', 'categories.id', '=', 'heritages.id')
+                ->join('images', 'images.id', '=', 'heritages.id')
+                ->selectRaw('heritages.name as heritage_name, categories.name as category_name, path')
+                ->paginate(12);
+                
+        return response()->json([
+            'status' => 200,
+            'heritage' => $heritage,
+        ]);
     }
 
     public function store(Request $request)
