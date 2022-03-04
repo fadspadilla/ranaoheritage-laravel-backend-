@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File; 
 use App\Models\Image;
 
@@ -11,7 +12,25 @@ class ImagesController extends Controller
 {
     public function index()
     {
+        // $heritage = DB::table('heritages')
+        //         ->join('categories', 'categories.id', '=', 'heritages.category_id')
+        //         ->selectRaw('heritages.name as heritage_name, categories.name as category_name')
+        //         ->get();        
         return Image::all();
+    }
+
+    public function heritageImages($id)
+    {
+        //SELECT images.path FROM images WHERE images.heritage_id = 1;
+        $images = DB::table('images')
+                    ->select('path')
+                    ->where('images.heritage_id', '=', $id)
+                    ->get();
+
+        return response()->json([
+            'status' => 200,
+            'images' => $images,
+        ]);
     }
 
     public function store(Request $request)

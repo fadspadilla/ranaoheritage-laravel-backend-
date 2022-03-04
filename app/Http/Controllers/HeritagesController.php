@@ -12,15 +12,36 @@ class HeritagesController extends Controller
     public function index()
     {        
         $heritage = DB::table('heritages')
-                ->join('categories', 'categories.id', '=', 'heritages.id')
-                ->join('images', 'images.id', '=', 'heritages.id')
-                ->selectRaw('heritages.name as heritage_name, categories.name as category_name, path')
-                ->paginate(12);
+                ->join('categories', 'categories.id', '=', 'heritages.category_id')
+                ->selectRaw('heritages.name as heritage_name, categories.name as category_name')
+                ->get();
                 
         return response()->json([
             'status' => 200,
             'heritage' => $heritage,
         ]);
+    }
+
+    public function catalog(Request $request)
+    {
+        $query = DB::table('heritages')
+                    ->join('categories', 'categories.id', '=', 'heritages.category_id')
+                    ->join('addresses', 'addresses.id', '=', 'heritages.address_id')
+                    ->join('municipalities', 'municipalities.id', '=', 'addresses.mun_id')
+                    ->join('provinces', 'provinces.id', '=', 'municipalities.id')
+                    ->selectRaw('heritages.id, heritages.name as heritage_name, categories.name as category_name, addresses.address, municipalities.name as municipality, provinces.name as province');
+        
+        if($filterBy = $request->input('filterBy')){
+            $query->where('categories.id', $filterBy);
+        }
+
+        if($sortedBy = $request->input('sortedBy')){
+            $query->orderBy('heritages.updated_at', $sortedBy);
+        }else{
+            $query->orderBy('heritages.updated_at', 'ASC');
+        }
+
+        return $query->get();
     }
 
     public function store(Request $request)

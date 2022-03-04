@@ -53,9 +53,11 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //Heritage
     Route::resource('heritages', HeritagesController::class);
+    Route::get('catalog', [HeritagesController::class, 'catalog']);
 
     //Image
     Route::resource('images', ImagesController::class);
+    Route::get('images/heritage-images/{id}', [ImagesController::class, 'heritageImages']);
 
     //Video
     Route::resource('videos', VideosController::class);
