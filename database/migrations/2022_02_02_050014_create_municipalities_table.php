@@ -17,10 +17,10 @@ class CreateMunicipalitiesTable extends Migration
             $table->id();            
             $table->string('name');            
             $table->text('description')->nullable();    
-            $table->unsignedBigInteger('prov_id');
+            $table->unsignedBigInteger('prov_id')->nullable();
             $table->foreign('prov_id')->references('id')->on('provinces')
                   ->onUpdate('cascade')
-                  ->onDelete('cascade');
+                  ->onDelete('set null');
             $table->timestamps();
         });
     }

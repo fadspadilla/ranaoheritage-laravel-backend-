@@ -18,20 +18,20 @@ class CreateHeritagesTable extends Migration
             $table->string('name');
             $table->text('description')->nullable();
 
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')
                   ->onUpdate('cascade')
-                  ->onDelete('cascade');
+                  ->onDelete('set null');
 
-            $table->unsignedBigInteger('category_id');
+            $table->unsignedBigInteger('category_id')->nullable();
             $table->foreign('category_id')->references('id')->on('categories')
                   ->onUpdate('cascade')
-                  ->onDelete('cascade');
+                  ->onDelete('set null');
 
-            $table->unsignedBigInteger('address_id');
+            $table->unsignedBigInteger('address_id')->nullable();
             $table->foreign('address_id')->references('id')->on('addresses')
                   ->onUpdate('cascade')
-                  ->onDelete('cascade');
+                  ->onDelete('set null');
             $table->timestamps();
         });
     }

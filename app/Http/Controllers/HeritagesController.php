@@ -24,13 +24,16 @@ class HeritagesController extends Controller
 
     public function catalog(Request $request)
     {
-        $query = DB::table('heritages')
-                    ->join('categories', 'categories.id', '=', 'heritages.category_id')
-                    ->join('addresses', 'addresses.id', '=', 'heritages.address_id')
-                    ->join('municipalities', 'municipalities.id', '=', 'addresses.mun_id')
-                    ->join('provinces', 'provinces.id', '=', 'municipalities.id')
-                    ->selectRaw('heritages.id, heritages.name as heritage_name, categories.name as category_name, addresses.address, municipalities.name as municipality, provinces.name as province');
-        
+        $query = DB::table(DB::raw('heritages', 'images'))
+                    ->join('heritages.id', '=', 'images.heritage_id')
+                    ->select('images.path', 'heritages.name');
+                    // ->join('categories', 'categories.id', '=', 'heritages.category_id')
+                    // ->join('addresses', 'addresses.id', '=', 'heritages.address_id')
+                    // ->join('municipalities', 'municipalities.id', '=', 'addresses.mun_id')
+                    // ->join('provinces', 'provinces.id', '=', 'municipalities.id')
+                    // ->selectRaw('heritages.id, heritages.name as heritage_name, categories.name as category_name, images.path, addresses.address, municipalities.name as municipality, provinces.name as province');
+
+
         if($filterBy = $request->input('filterBy')){
             $query->where('categories.id', $filterBy);
         }
@@ -41,7 +44,7 @@ class HeritagesController extends Controller
             $query->orderBy('heritages.updated_at', 'ASC');
         }
 
-        return $query->get();
+        return $query->paginate(12);
     }
 
     public function store(Request $request)

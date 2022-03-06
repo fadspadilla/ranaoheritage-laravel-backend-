@@ -32,6 +32,15 @@ class ImagesController extends Controller
             'images' => $images,
         ]);
     }
+    public function singleImage($id)
+    {
+        $image = DB::table('images')
+                    ->select('path')
+                    ->where('images.heritage_id', '=', $id)
+                    ->first();
+
+        return $image;
+    }
 
     public function store(Request $request)
     {

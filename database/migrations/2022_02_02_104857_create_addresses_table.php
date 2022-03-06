@@ -16,14 +16,14 @@ class CreateAddressesTable extends Migration
         Schema::create('addresses', function (Blueprint $table) {
             $table->id();
             $table->string('address');
-            $table->unsignedBigInteger('mun_id');
+            $table->unsignedBigInteger('mun_id')->nullable();
             $table->foreign('mun_id')->references('id')->on('municipalities')
                   ->onUpdate('cascade')
-                  ->onDelete('cascade');
-            $table->unsignedBigInteger('loc_id');
+                  ->onDelete('set null');
+            $table->unsignedBigInteger('loc_id')->nullable();
             $table->foreign('loc_id')->references('id')->on('locations')
                     ->onUpdate('cascade')
-                    ->onDelete('cascade');
+                    ->onDelete('set null');
             $table->timestamps();
         });
     }
