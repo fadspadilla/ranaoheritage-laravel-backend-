@@ -40,6 +40,7 @@ Route::middleware('auth:sanctum')->group(function () {
     
     //icons
     Route::resource('icons', IconsController::class);
+    Route::post('update-icon', [IconsController::class, 'updateIcon']);
 
     //Municipalities
     Route::resource('municipalities', MunicipalitiesController::class);

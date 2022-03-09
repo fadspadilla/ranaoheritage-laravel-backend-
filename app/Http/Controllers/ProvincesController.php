@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\File; 
 use App\Models\Province;
 
 class ProvincesController extends Controller
@@ -28,11 +29,22 @@ class ProvincesController extends Controller
             return response()->json([
                 'status' => 400,
                 'errors' => $validator->messages(),
-            ]);
+            ]); 
         }
         else{
 
-            $province = Province::create($request->all()); //by traversy
+            $province = new Province;
+
+            $province->name = $request->input('name');
+            $province->description = $request->input('description');
+            if($request->hasFile('seal')){
+                $file = $request->file('seal');
+                $extension = $file->getClientOriginalExtension();
+                $filename = rand().'_'.time() .'.'.$extension;
+                $file->move('uploads/seals/', $filename);
+                $province->seal = 'uploads/seals/'.$filename;
+            }
+            $province->save();
         
             return response()->json([
                 'status' => 200,
@@ -103,6 +115,7 @@ class ProvincesController extends Controller
         $province = Province::find($id);
 
         if($province){
+            File::delete($province->seal);
             Province::destroy($id);
 
             return response()->json([

@@ -1,9 +1,10 @@
 <?php
-
+ 
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\File; 
 use App\Models\Icon;
 
 class IconsController extends Controller
@@ -75,28 +76,10 @@ class IconsController extends Controller
         $icon = Icon::find($id);
 
         if($icon){
-            $validator = Validator::make($request->all(), [
-                'name' => 'required',
-                'link' => 'required',
+            return response()->json([
+                'status' => 200,
+                'message' => 'Icon Found',
             ]);
-    
-            if($validator->fails())
-            {
-                return response()->json([
-                    'status' => 400,
-                    'errors' => $validator->messages(),
-                ]);
-            }
-            else
-            {
-                $icon->update($request->all()); //by traversy
-
-                return response()->json([
-                    'status' => 200,
-                    'icon' => $icon,
-                    'message' => 'Icon Updated Successfully',
-                ]);
-            }
         }
         else
         {
@@ -105,6 +88,49 @@ class IconsController extends Controller
                 'message' => 'Icon Not Found',
             ]);
         }
+
+        // if($icon){
+        //     $validator = Validator::make($request->all(), [
+        //         'name' => 'required',
+        //         'link' => 'required',
+        //     ]);
+    
+        //     if($validator->fails())
+        //     {
+        //         return response()->json([
+        //             'status' => 400,
+        //             'errors' => $validator->messages(),
+        //         ]);
+        //     }
+        //     else
+        //     {
+        //         $icon->name = $request->input('name');
+        //         if($request->hasFile('link')){
+        //             $path = $icon->link;
+        //             if(File::exists($path)){
+        //                 File::delete($path);
+        //             }
+        //             $file = $request->file('link');
+        //             $extension = $file->getClientOriginalExtension();
+        //             $filename = rand().'_'.time() .'.'.$extension;
+        //             $file->move('uploads/icons/', $filename);
+        //             $icon->link = 'uploads/icons/'.$filename;
+        //         }
+        //         $icon->save();
+
+        //         return response()->json([
+        //             'status' => 200,
+        //             'message' => 'Icon Added Successfully',
+        //         ]);
+        //     }
+        // }
+        // else
+        // {
+        //     return response()->json([
+        //         'status' => 404,
+        //         'message' => 'Icon Not Found',
+        //     ]);
+        // }
     }
 
     /**
@@ -118,6 +144,7 @@ class IconsController extends Controller
         $icon = Icon::find($id);
 
         if($icon){
+            File::delete($icon->link);
             Icon::destroy($id);
 
             return response()->json([

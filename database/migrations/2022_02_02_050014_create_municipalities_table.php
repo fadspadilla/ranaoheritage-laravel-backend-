@@ -17,6 +17,7 @@ class CreateMunicipalitiesTable extends Migration
             $table->id();            
             $table->string('name');            
             $table->text('description')->nullable();    
+            $table->string('seal')->nullable();
             $table->unsignedBigInteger('prov_id')->nullable();
             $table->foreign('prov_id')->references('id')->on('provinces')
                   ->onUpdate('cascade')

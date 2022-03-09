@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File; 
 use App\Models\Municipality;
 
 
@@ -54,12 +55,24 @@ class MunicipalitiesController extends Controller
             ]);
         }
         else{
+            $mun = new Municipality;
 
-            $municipality = Municipality::create($request->all()); //by traversy
-        
+            $mun->name = $request->input('name');
+            $mun->description = $request->input('description');
+            $mun->prov_id = $request->input('prov_id');            
+            if($request->hasFile('seal')){
+                $file = $request->file('seal');
+                $extension = $file->getClientOriginalExtension();
+                $filename = rand().'_'.time() .'.'.$extension;
+                $file->move('uploads/seals/', $filename);
+                $mun->seal = 'uploads/seals/'.$filename;
+            }
+            $mun->save();
+
+            
             return response()->json([
                 'status' => 200,
-                'municipality' => $municipality,
+                'municipality' => $mun,
                 'message' => 'Municipality Added Successfully',
             ]);
         }   
@@ -127,6 +140,7 @@ class MunicipalitiesController extends Controller
         $municipality = Municipality::find($id);
 
         if($municipality){
+            File::delete($municipality->seal);
             Municipality::destroy($id);
 
             return response()->json([
