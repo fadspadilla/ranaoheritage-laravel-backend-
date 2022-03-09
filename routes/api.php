@@ -37,6 +37,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //provinces
     Route::resource('provinces', ProvincesController::class);
+    Route::get('province-list', [ProvincesController::class, 'provinceList']);
     
     //icons
     Route::resource('icons', IconsController::class);
@@ -44,7 +45,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //Municipalities
     Route::resource('municipalities', MunicipalitiesController::class);
-    Route::get('municipalities/mun-in-prov/{id}', [ MunicipalitiesController::class, 'munInProv']);
+    Route::get('municipalities/mun-list-province/{id}', [ MunicipalitiesController::class, 'munInProv']);
+    Route::get('mun-list', [ MunicipalitiesController::class, 'munList']);
+    Route::get('mun-details', [ MunicipalitiesController::class, 'munDetails']);
 
     //Locations
     Route::resource('locations', LocationsController::class);

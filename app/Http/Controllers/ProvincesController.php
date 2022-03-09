@@ -5,17 +5,36 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\File; 
+use Illuminate\Support\Facades\DB;
 use App\Models\Province;
 
 class ProvincesController extends Controller
 {
     public function index()
     {
-        $provinces = Province::all();
+        $provinces = DB::table('provinces')->select('id', 'name')->get();
+
         return response()->json([
             'status' => 200,
             'provinces' => $provinces,
         ]);
+    }
+
+    public function provinceList(Request $request)
+    {
+        $query = DB::table('provinces');
+
+        if($search = $request->input('search')){
+            $query->whereRaw("name LIKE '%". $search . "%'");
+        }
+
+        if($sort = $request->input('sort')){
+            $query->orderBy('name', $sort);
+        }else{
+            $query->orderBy('name', 'ASC');
+        }
+
+        return $query->paginate(12);
     }
 
     public function store(Request $request)

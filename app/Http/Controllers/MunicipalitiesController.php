@@ -12,14 +12,41 @@ use App\Models\Municipality;
 class MunicipalitiesController extends Controller
 {
     public function index()
-    {
-        $municipality = Municipality::all();
-        return response()->json([
-            'status' => 200,
-            'municipality' => $municipality,
-        ]);
+    {  
+        return Municipality::all();
     }
 
+    public function munDetails($id) {
+        // $query = DB::table('municipalities')
+        //             ->
+        //             ->rightJoin('provinces', 'provinces.id', '=', 'municipalities.prov_id')
+        //             ->get();
+
+        // return $query;
+    }
+
+    public function munLIst(Request $request)
+    {
+        $query = DB::table('municipalities');
+
+        if($search = $request->input('search')){
+            $query->whereRaw("name LIKE '%". $search . "%'");
+        }
+
+        if($filter = $request->input('filter')){
+            $query->where('prov_id', $filter);
+        }
+
+        if($sort = $request->input('sort')){
+            $query->orderBy('name', $sort);
+        }else{
+            $query->orderBy('name', 'ASC');
+        }
+
+        return $query->paginate(12);        
+    }
+
+    // returns municipalities in a province
     public function munInProv($id)
     {
         $municipality = Municipality::where('prov_id', $id)->get();        
