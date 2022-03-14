@@ -17,12 +17,11 @@ class MunicipalitiesController extends Controller
     }
 
     public function munDetails($id) {
-        // $query = DB::table('municipalities')
-        //             ->
-        //             ->rightJoin('provinces', 'provinces.id', '=', 'municipalities.prov_id')
-        //             ->get();
-
-        // return $query;
+        return $query = DB::table('municipalities as mun')
+                        ->leftJoin('provinces as prov', 'mun.prov_id', '=', 'prov.id')
+                        ->select('mun.id', 'mun.name as municipality', 'mun.seal', 'mun.description', 'prov.name as province')          
+                        ->where('mun.id', '=', $id)              
+                        ->get();
     }
 
     public function munLIst(Request $request)
@@ -125,41 +124,58 @@ class MunicipalitiesController extends Controller
         }
     }
 
-    public function update(Request $request, $id)
+    public function updateMunicipality(Request $request, $id)
     {
-        $municipality = Municipality::find($id);
+        $validator = Validator::make($request->all(), [
+            'name' => 'max:191',
+            'seal' => 'image'
+        ]);
 
-        if($municipality){
-            $validator = Validator::make($request->all(), [
-                'name' => 'required',
-                'prov_id' => 'required',
-            ]);
-    
-            if($validator->fails())
-            {
-                return response()->json([
-                    'status' => 400,
-                    'errors' => $validator->messages(),
-                ]);
-            }
-            else
-            {
-                $municipality->update($request->all()); //by traversy
+        if($validator->fails())
+        {
+            return response()->json([
+                'status' => 422,
+                'errors' => $validator->messages(),
+            ]); 
+        }
+        else{
 
+            $mun = Municipality::find($id);
+
+            if($mun){
+                $mun->name = $request->input('name');
+                $mun->description = $request->input('description');
+                $mun->prov_id = $request->input('prov_id');
+
+                if($request->hasFile('seal')){
+                    //delete old seal
+                    $path = $mun->seal;
+                    if(File::exists($path))
+                    {
+                        File::delete($path);
+                    }
+
+                    $file = $request->file('seal');
+                    $extension = $file->getClientOriginalExtension();
+                    $filename = rand().'_'.time() .'.'.$extension;
+                    $file->move('uploads/seals/', $filename);
+                    $mun->seal = 'uploads/seals/'.$filename;
+                }
+
+                $mun->save();
+            
                 return response()->json([
                     'status' => 200,
-                    'municipality' => $municipality,
                     'message' => 'Municipality Updated Successfully',
                 ]);
             }
-        }
-        else
-        {
-            return response()->json([
-                'status' => 404,
-                'message' => 'Municipality Not Found',
-            ]);
-        }
+            else{
+                return response()->json([
+                    'status' => 404,
+                    'message' => 'Not Found',
+                ]); 
+            }            
+        } 
     }
 
     public function destroy($id)

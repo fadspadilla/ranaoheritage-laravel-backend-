@@ -71,66 +71,55 @@ class IconsController extends Controller
         }
     }
 
-    public function update(Request $request, $id)
+    public function updateIcon(Request $request, $id)
     {
-        $icon = Icon::find($id);
+        $validator = Validator::make($request->all(), [
+            'name' => 'max:191',
+            'link' => 'image|mimes:png,svg|max:2048',
+        ]);
 
-        if($icon){
-            return response()->json([
-                'status' => 200,
-                'message' => 'Icon Found',
-            ]);
-        }
-        else
+        if($validator->fails())
         {
             return response()->json([
-                'status' => 404,
-                'message' => 'Icon Not Found',
+                'status' => 422,
+                'errors' => $validator->messages(),
             ]);
         }
+        else{
+            $icon = Icon::find($id);
 
-        // if($icon){
-        //     $validator = Validator::make($request->all(), [
-        //         'name' => 'required',
-        //         'link' => 'required',
-        //     ]);
-    
-        //     if($validator->fails())
-        //     {
-        //         return response()->json([
-        //             'status' => 400,
-        //             'errors' => $validator->messages(),
-        //         ]);
-        //     }
-        //     else
-        //     {
-        //         $icon->name = $request->input('name');
-        //         if($request->hasFile('link')){
-        //             $path = $icon->link;
-        //             if(File::exists($path)){
-        //                 File::delete($path);
-        //             }
-        //             $file = $request->file('link');
-        //             $extension = $file->getClientOriginalExtension();
-        //             $filename = rand().'_'.time() .'.'.$extension;
-        //             $file->move('uploads/icons/', $filename);
-        //             $icon->link = 'uploads/icons/'.$filename;
-        //         }
-        //         $icon->save();
+            if($icon){               
 
-        //         return response()->json([
-        //             'status' => 200,
-        //             'message' => 'Icon Added Successfully',
-        //         ]);
-        //     }
-        // }
-        // else
-        // {
-        //     return response()->json([
-        //         'status' => 404,
-        //         'message' => 'Icon Not Found',
-        //     ]);
-        // }
+                $icon->name = $request->input('name');
+                if($request->hasFile('link')){
+                    //delete Old icon
+                    $path = $icon->link;
+                    if(File::exists($path))
+                    {
+                        File::delete($path);
+                    }
+                    
+
+                    $file = $request->file('link');
+                    $extension = $file->getClientOriginalExtension();
+                    $filename = rand().'_'.time() .'.'.$extension;
+                    $file->move('uploads/icons/', $filename);
+                    $icon->link = 'uploads/icons/'.$filename;
+                }
+                $icon->update();
+
+                return response()->json([
+                    'status' => 200,
+                    'message' => 'Icon Updated Successfully',
+                ]); 
+            }
+            else{
+                return response()->json([
+                    'status' => 404,
+                    'message' => 'Not Found',
+                ]); 
+            }            
+        }
     }
 
     /**

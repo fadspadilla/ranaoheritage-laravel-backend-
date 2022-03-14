@@ -30,24 +30,23 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //categories
     Route::resource('categories', CategoriesController::class);
-    // Route::post('categories', [CategoriesController::class, 'store']);
-    // Route::get('categories', [CategoriesController::class, 'index']);
-    // Route::get('categories/${id}', [CategoriesController::class, 'show']);
     //** end of categories */
 
     //provinces
     Route::resource('provinces', ProvincesController::class);
     Route::get('province-list', [ProvincesController::class, 'provinceList']);
-    
+    Route::post('update-province/{id}', [ProvincesController::class, 'updateProvince']);
+
     //icons
     Route::resource('icons', IconsController::class);
-    Route::post('update-icon', [IconsController::class, 'updateIcon']);
+    Route::post('update-icon/{id}', [IconsController::class, 'updateIcon']);
 
     //Municipalities
     Route::resource('municipalities', MunicipalitiesController::class);
     Route::get('municipalities/mun-list-province/{id}', [ MunicipalitiesController::class, 'munInProv']);
     Route::get('mun-list', [ MunicipalitiesController::class, 'munList']);
-    Route::get('mun-details', [ MunicipalitiesController::class, 'munDetails']);
+    Route::get('mun-details/{id}', [ MunicipalitiesController::class, 'munDetails']);
+    Route::post('update-municipality/{id}', [ MunicipalitiesController::class, 'updateMunicipality']);
 
     //Locations
     Route::resource('locations', LocationsController::class);
