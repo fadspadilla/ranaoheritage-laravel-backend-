@@ -22,7 +22,7 @@ class IconsController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|max:191',
-            'link' => 'required|image|mimes:png,svg|max:2048',
+            'link' => 'image|mimes:png,svg|max:2048',
         ]);
 
         if($validator->fails())

@@ -17,11 +17,23 @@ class MunicipalitiesController extends Controller
     }
 
     public function munDetails($id) {
-        return $query = DB::table('municipalities as mun')
-                        ->leftJoin('provinces as prov', 'mun.prov_id', '=', 'prov.id')
-                        ->select('mun.id', 'mun.name as municipality', 'mun.seal', 'mun.description', 'prov.name as province')          
-                        ->where('mun.id', '=', $id)              
-                        ->get();
+        $query = DB::table('municipalities as mun')
+                    ->leftJoin('provinces as prov', 'mun.prov_id', '=', 'prov.id')
+                    ->select('mun.id', 'mun.name as municipality', 'mun.seal', 'mun.description', 'prov.name as province')          
+                    ->where('mun.id', '=', $id)              
+                    ->get();
+
+        if($query){
+            return response()->json([
+                'status' => 200,
+                'municipality' => $query,
+            ]);
+        }else {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Municipality Not Found',
+            ]);
+        }
     }
 
     public function munLIst(Request $request)
