@@ -11,19 +11,28 @@ use App\Models\Image;
 class ImagesController extends Controller
 {
     public function index()
-    {
-        // $heritage = DB::table('heritages')
-        //         ->join('categories', 'categories.id', '=', 'heritages.category_id')
-        //         ->selectRaw('heritages.name as heritage_name, categories.name as category_name')
-        //         ->get();        
-        return Image::all();
+    {      
+        $images = Image::select("*")
+                    ->orderBy("created_at", "desc")
+                    ->take(10)
+                    ->get();
+
+        return response()->json([
+            'status' => 200,
+            'images' => $images,
+        ]);
+    }
+    
+    public function counter()
+    {      
+        return Image::all()->count();
     }
 
     public function heritageImages($id)
     {
         //SELECT images.path FROM images WHERE images.heritage_id = 1;
         $images = DB::table('images')
-                    ->select('path')
+                    ->select('*')
                     ->where('images.heritage_id', '=', $id)
                     ->get();
 
@@ -32,6 +41,7 @@ class ImagesController extends Controller
             'images' => $images,
         ]);
     }
+
     public function singleImage($id)
     {
         $image = DB::table('images')
@@ -39,7 +49,10 @@ class ImagesController extends Controller
                     ->where('images.heritage_id', '=', $id)
                     ->first();
 
-        return $image;
+        return response()->json([
+            'status' => 200,
+            'image' => $image,
+        ]);
     }
 
     public function store(Request $request)

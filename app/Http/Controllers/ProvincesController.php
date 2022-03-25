@@ -20,6 +20,20 @@ class ProvincesController extends Controller
         ]);
     }
 
+    public function newProvince()
+    {
+        $provinces = DB::table('provinces')->select('id', 'name', 'seal')->take(2)->get();
+
+        return response()->json([
+            'status' => 200,
+            'provinces' => $provinces,
+        ]);
+    }
+
+    public function counter() {
+        return Province::all()->count();
+    }
+
     public function provinceList(Request $request)
     {
         $query = DB::table('provinces');

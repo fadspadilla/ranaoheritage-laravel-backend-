@@ -22,29 +22,113 @@ class HeritagesController extends Controller
         ]);
     }
 
+    public function counter(){
+        return Heritage::all()->count();
+    }
+
+    public function show($id){
+        $heritage = Heritage::find($id);
+
+        if($heritage)
+        {
+            return response()->json([
+                'status' => 200,
+                'heritage' => $heritage,
+            ]);
+        }
+        else
+        {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Heritage Not Found',
+            ]);
+        }
+    }
+
     public function catalog(Request $request)
     {
-        // $query = DB::table(DB::raw('heritages', 'images'))
-        //             ->join('heritages.id', '=', 'images.heritage_id')
-        //             ->select('images.path', 'heritages.name');
-        // ->join('categories', 'categories.id', '=', 'heritages.category_id')
-        // ->join('addresses', 'addresses.id', '=', 'heritages.address_id')
-        // ->join('municipalities', 'municipalities.id', '=', 'addresses.mun_id')
-        // ->join('provinces', 'provinces.id', '=', 'municipalities.id')
-        // ->selectRaw('heritages.id, heritages.name as heritage_name, categories.name as category_name, images.path, addresses.address, municipalities.name as municipality, provinces.name as province');
-
+        $query = DB::table('heritages')  
+                ->leftJoin('categories', 'heritages.category_id', '=', 'categories.id')          
+                ->leftJoin('addresses', 'heritages.address_id', '=', 'addresses.id')
+                ->leftJoin('municipalities', 'addresses.mun_id', '=', 'municipalities.id')
+                ->leftJoin('provinces', 'municipalities.prov_id', '=', 'provinces.id')
+                ->select('heritages.id', 'heritages.name', 'municipalities.name as mun', 'provinces.name as prov', 'heritages.created_at', 'categories.id as categoryID');
         
-        if($filterBy = $request->input('filterBy')){
-            $query->where('categories.id', $filterBy);
+        if($search = $request->input('search')){
+            $query->whereRaw("heritages.name LIKE '%". $search . "%'");
         }
 
-        if($sortedBy = $request->input('sortedBy')){
-            $query->orderBy('heritages.updated_at', $sortedBy);
+        if($filter = $request->input('filter')){
+            $query->where('categories.id', $filter);
+        }
+
+        if($sort = $request->input('sort')){
+            $query->orderBy('heritages.name', $sort);
         }else{
-            $query->orderBy('heritages.updated_at', 'ASC');
+            $query->orderBy('heritages.name', 'ASC');
         }
 
         return $query->paginate(12);
+    }
+
+    public function dashboard() {
+        $query = DB::table('heritages')  
+                ->leftJoin('categories', 'heritages.category_id', '=', 'categories.id')          
+                ->leftJoin('addresses', 'heritages.address_id', '=', 'addresses.id')
+                ->leftJoin('municipalities', 'addresses.mun_id', '=', 'municipalities.id')
+                ->leftJoin('provinces', 'municipalities.prov_id', '=', 'provinces.id')
+                ->select('heritages.id', 'heritages.name', 'municipalities.name as mun', 'provinces.name as prov', 'heritages.created_at', 'categories.id as categoryID');
+        
+        return $query->orderBy('heritages.name', 'DESC')->take(2)->get();
+    }
+
+    public function editHeritage($id){
+        $query = DB::table('heritages as her')
+                    ->leftJoin('categories as cat', 'her.category_id', '=', 'cat.id')          
+                    ->leftJoin('addresses as add', 'her.address_id', '=', 'add.id')
+                    ->leftJoin('municipalities as mun', 'add.mun_id', '=', 'mun.id')
+                    ->leftJoin('provinces as prov', 'mun.prov_id', '=', 'prov.id')
+                    ->leftJoin('locations as loc', 'add.loc_id', '=', 'loc.id')
+                    ->leftJoin('icons', 'loc.icon_id', '=', 'icons.id')
+                    ->select('her.id as her_id', 'add.id as add_id', 'prov.id as prov_id',  'loc.id as loc_id')
+                    ->where('her.id', '=', $id)
+                    ->get();
+
+        if($query){
+            return response()->json([
+                'status' => 200,
+                'details' => $query,
+            ]);
+        }else {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Heritage Not Found',
+            ]);
+        }
+    }
+
+    public function catalogDetails(Request $request, $id){
+        $query = DB::table('heritages as her')
+                    ->leftJoin('categories as cat', 'her.category_id', '=', 'cat.id')          
+                    ->leftJoin('addresses as add', 'her.address_id', '=', 'add.id')
+                    ->leftJoin('municipalities as mun', 'add.mun_id', '=', 'mun.id')
+                    ->leftJoin('provinces as prov', 'mun.prov_id', '=', 'prov.id')
+                    ->leftJoin('locations as loc', 'add.loc_id', '=', 'loc.id')
+                    ->select('her.id', 'her.name as heritage_name', 'her.description', 'cat.name as category', 'add.address', 'mun.name as municipality', 'prov.name as province', 'loc.longitude', 'loc.latitude')
+                    ->where('her.id', '=', $id)
+                    ->get();
+
+        if($query){
+            return response()->json([
+                'status' => 200,
+                'details' => $query,
+            ]);
+        }else {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Heritage Not Found',
+            ]);
+        }
     }
 
     public function store(Request $request)
@@ -75,55 +159,17 @@ class HeritagesController extends Controller
         } 
     }
 
-    public function show($id)
-    {
-        $heritage = Heritage::find($id);
-
-        if($heritage)
-        {
-            return response()->json([
-                'status' => 200,
-                'heritage' => $heritage,
-            ]);
-        }
-        else
-        {
-            return response()->json([
-                'status' => 404,
-                'message' => 'Heritage Not Found',
-            ]);
-        }
-    }
-
     public function update(Request $request, $id)
     {
         $heritage = Heritage::find($id);
 
         if($heritage){
-            $validator = Validator::make($request->all(), [
-                'name' => 'required',            
-                'user_id' => 'required',            
-                'category_id' => 'required',
-                'address_id' => 'required',
+            $heritage->update($request->all()); //by traversy
+            
+            return response()->json([
+                'status' => 200,
+                'message' => 'Heritage Updated Successfully',
             ]);
-    
-            if($validator->fails())
-            {
-                return response()->json([
-                    'status' => 400,
-                    'errors' => $validator->messages(),
-                ]);
-            }
-            else
-            {
-                $heritage->update($request->all()); //by traversy
-
-                return response()->json([
-                    'status' => 200,
-                    'heritage' => $heritage,
-                    'message' => 'Heritage Updated Successfully',
-                ]);
-            }
         }
         else
         {

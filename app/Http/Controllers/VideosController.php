@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File; 
 use App\Models\Video;
 
@@ -11,13 +12,40 @@ class VideosController extends Controller
 {
     public function index()
     {
-        return Video::all();
+        $videos = Video::select("*")
+                    ->orderBy("created_at", "desc")
+                    ->take(1)
+                    ->get();
+
+        return response()->json([
+            'status' => 200,
+            'videos' => $videos,
+        ]);
+    }
+
+    public function counter()
+    {
+        return Video::all()->count();
+    }
+
+    public function heritageVideos($id)
+    {
+        //SELECT images.path FROM images WHERE images.heritage_id = 1;
+        $videos = DB::table('videos')
+                    ->select('*')
+                    ->where('videos.heritage_id', '=', $id)
+                    ->get();
+
+        return response()->json([
+            'status' => 200,
+            'videos' => $videos,
+        ]);
     }
 
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'path.*' => 'required|mimes:mp4,3gp,ogx,oga,ogv,ogg,webm,ts,mkv',          
+            //'path.*' => 'required|mimes:mp4,3gp,ogx,oga,ogv,ogg,webm,ts,mkv',          
             'heritage_id' => 'required',   
         ]);
 

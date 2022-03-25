@@ -65,29 +65,12 @@ class LocationsController extends Controller
         $location = Location::find($id);
 
         if($location){
-            $validator = Validator::make($request->all(), [
-                'longitude' => 'required',            
-                'latitude' => 'required',            
-                'icon_id' => 'required'
-            ]);
-    
-            if($validator->fails())
-            {
-                return response()->json([
-                    'status' => 400,
-                    'errors' => $validator->messages(),
-                ]);
-            }
-            else
-            {
-                $location->update($request->all()); //by traversy
+            $location->update($request->all()); //by traversy
 
                 return response()->json([
                     'status' => 200,
-                    'location' => $location,
                     'message' => 'Location Updated Successfully',
                 ]);
-            }
         }
         else
         {

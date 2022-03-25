@@ -16,6 +16,12 @@ class MunicipalitiesController extends Controller
         return Municipality::all();
     }
 
+    public function counter($id) {
+        return $query = DB::table('municipalities')        
+                    ->where('prov_id', '=', $id)
+                    ->count();
+    }
+
     public function munDetails($id) {
         $query = DB::table('municipalities as mun')
                     ->leftJoin('provinces as prov', 'mun.prov_id', '=', 'prov.id')
