@@ -104,6 +104,28 @@ class AuthController extends Controller
         }
     }
 
+
+    public function updateUser(Request $request, $id){
+        $user = User::find($id);
+
+        if($user){
+            $user->update($request->all()); //by traversy
+
+            return response()->json([
+                'status' => 200,
+                'message' => 'outside else',
+            ]);
+        }
+        else
+        {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Address Not Found',
+            ]);
+        }
+    }
+
+
     public function updateName(Request $request, $id)
     {
         //validate the data received from request

@@ -27,6 +27,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('auth-user/name/{id}', [AuthController::class, 'updateName']);
     Route::put('auth-user/username/{id}', [AuthController::class, 'updateUsername']);
     Route::put('auth-user/password/{id}', [AuthController::class, 'updatePassword']);
+    Route::put('auth-user/update/{id}', [AuthController::class, 'updateUser']);
 
     //categories
     Route::resource('categories', CategoriesController::class);
