@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 use App\Models\Location;
 
 class LocationsController extends Controller
@@ -11,6 +12,31 @@ class LocationsController extends Controller
     public function index()
     {
         return Location::all();
+    }
+
+    public function location()
+    {
+        $query = DB::table('heritages as her')
+                    ->leftJoin('categories as cat', 'her.category_id', '=', 'cat.id')          
+                    ->leftJoin('addresses as add', 'her.address_id', '=', 'add.id')
+                    ->leftJoin('municipalities as mun', 'add.mun_id', '=', 'mun.id')
+                    ->leftJoin('provinces as prov', 'mun.prov_id', '=', 'prov.id')
+                    ->leftJoin('locations as loc', 'add.loc_id', '=', 'loc.id')
+                    ->leftJoin('icons', 'loc.icon_id', '=', 'icons.id')
+                    ->select('her.id', 'her.name as heritage_name', 'cat.name as category', 'loc.longitude', 'loc.latitude', 'icons.link')
+                    ->get();
+
+        if($query){
+            return response()->json([
+                'status' => 200,
+                'details' => $query,
+            ]);
+        }else {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Heritage Not Found',
+            ]);
+        }
     }
 
     public function store(Request $request)
@@ -67,10 +93,10 @@ class LocationsController extends Controller
         if($location){
             $location->update($request->all()); //by traversy
 
-                return response()->json([
-                    'status' => 200,
-                    'message' => 'Location Updated Successfully',
-                ]);
+            return response()->json([
+                'status' => 200,
+                'message' => 'Location Updated Successfully',
+            ]);
         }
         else
         {

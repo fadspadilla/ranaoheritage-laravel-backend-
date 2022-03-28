@@ -45,6 +45,29 @@ class HeritagesController extends Controller
         }
     }
 
+    public function search(Request $request){
+        $query = DB::table('heritages')  
+                ->leftJoin('categories', 'heritages.category_id', '=', 'categories.id')          
+                ->leftJoin('addresses', 'heritages.address_id', '=', 'addresses.id')
+                ->leftJoin('municipalities', 'addresses.mun_id', '=', 'municipalities.id')
+                ->leftJoin('provinces', 'municipalities.prov_id', '=', 'provinces.id')
+                ->select('heritages.id', 'heritages.name', 'municipalities.name as mun', 'provinces.name as prov', 'heritages.created_at', 'categories.id as categoryID');
+        
+        if($search = $request->input('search')){
+            $query->whereRaw("heritages.name LIKE '%". $search . "%'")
+                  ->orWhereRaw("municipalities.name LIKE '%". $search . "%'")
+                  ->orWhereRaw("provinces.name LIKE '%". $search . "%'");
+        }
+
+        if($sort = $request->input('sort')){
+            $query->orderBy('heritages.name', $sort);
+        }else{
+            $query->orderBy('heritages.name', 'ASC');
+        }
+
+        return $query->paginate(12);                
+    }
+
     public function catalog(Request $request)
     {
         $query = DB::table('heritages')  
