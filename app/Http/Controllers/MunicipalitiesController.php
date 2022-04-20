@@ -42,6 +42,40 @@ class MunicipalitiesController extends Controller
         }
     }
 
+    public function munBasicDetails(Request $request) {
+        $query = DB::table('municipalities as mun')
+                    ->leftJoin('provinces as prov', 'mun.prov_id', '=', 'prov.id')
+                    ->select('mun.id', 'mun.name as municipality', 'mun.seal', 'prov.name as province') 
+                    ->orderBy('municipality', 'ASC');
+
+        if($search = $request->input('search')){
+            $query->whereRaw("mun.name LIKE '%". $search . "%'");
+        }
+
+        return $query->paginate(12);
+    }
+
+    public function munSwiper($id) {
+        $query = DB::table('municipalities as mun')
+                    ->leftJoin('provinces as prov', 'mun.prov_id', '=', 'prov.id')
+                    ->select('mun.id', 'mun.name as municipality', 'mun.seal', 'prov.name as province') 
+                    ->where('mun.prov_id', '=', $id)    
+                    ->get();
+
+                    
+        if($query){
+            return response()->json([
+                'status' => 200,
+                'municipality' => $query,
+            ]);
+        }else {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Municipality Not Found',
+            ]);
+        }
+    }
+
     public function munLIst(Request $request)
     {
         $query = DB::table('municipalities');

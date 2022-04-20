@@ -33,23 +33,7 @@ class ProvincesController extends Controller
     public function counter() {
         return Province::all()->count();
     }
-
-    public function provinceList(Request $request)
-    {
-        $query = DB::table('provinces');
-
-        if($search = $request->input('search')){
-            $query->whereRaw("name LIKE '%". $search . "%'");
-        }
-
-        if($sort = $request->input('sort')){
-            $query->orderBy('name', $sort);
-        }else{
-            $query->orderBy('name', 'ASC');
-        }
-
-        return $query->paginate(12);
-    }
+    
 
     public function store(Request $request)
     {
@@ -88,6 +72,43 @@ class ProvincesController extends Controller
     }
 
     public function show($id)
+    {
+        $province = Province::find($id);
+
+        if($province)
+        {
+            return response()->json([
+                'status' => 200,
+                'province' => $province,
+            ]);
+        }
+        else
+        {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Province Not Found',
+            ]);
+        }
+    }
+
+    public function provinceList(Request $request)
+    {
+        $query = DB::table('provinces');
+
+        if($search = $request->input('search')){
+            $query->whereRaw("name LIKE '%". $search . "%'");
+        }
+
+        if($sort = $request->input('sort')){
+            $query->orderBy('name', $sort);
+        }else{
+            $query->orderBy('name', 'ASC');
+        }
+
+        return $query->paginate(12);
+    }
+
+    public function provDetails($id)
     {
         $province = Province::find($id);
 

@@ -14,7 +14,7 @@ class LocationsController extends Controller
         return Location::all();
     }
 
-    public function location()
+    public function location(Request $request)
     {
         $query = DB::table('heritages as her')
                     ->leftJoin('categories as cat', 'her.category_id', '=', 'cat.id')          
@@ -23,20 +23,15 @@ class LocationsController extends Controller
                     ->leftJoin('provinces as prov', 'mun.prov_id', '=', 'prov.id')
                     ->leftJoin('locations as loc', 'add.loc_id', '=', 'loc.id')
                     ->leftJoin('icons', 'loc.icon_id', '=', 'icons.id')
-                    ->select('her.id', 'her.name as heritage_name', 'cat.name as category', 'loc.longitude', 'loc.latitude', 'icons.link')
-                    ->get();
+                    ->select('her.id', 'her.name as heritage_name', 'cat.name as category', 'loc.longitude', 'loc.latitude', 'icons.link');
 
-        if($query){
-            return response()->json([
-                'status' => 200,
-                'details' => $query,
-            ]);
-        }else {
-            return response()->json([
-                'status' => 404,
-                'message' => 'Heritage Not Found',
-            ]);
+        if($search = $request->input('search')){
+            $query->whereRaw("her.name LIKE '%". $search . "%'")
+                    ->orWhereRaw("mun.name LIKE '%". $search . "%'")
+                    ->orWhereRaw("prov.name LIKE '%". $search . "%'");
         }
+
+        return $query->get();
     }
 
     public function store(Request $request)

@@ -17,8 +17,26 @@ use App\Http\Controllers\VideosController;
 
 //Public Routes
 Route::post('register', [AuthController::class, 'register']);
-Route::post('login', [AuthController::class, 'login']);
-
+Route::post('login', [AuthController::class, 'login']);    
+    /** heritages */
+Route::get('heritage/search', [HeritagesController::class, 'search']);   
+Route::get('catalog', [HeritagesController::class, 'catalog']);   
+Route::get('catalog-details/{id}', [HeritagesController::class, 'catalogDetails']);   
+    /** multimedia */
+Route::get('images/heritage-images/{id}', [ImagesController::class, 'heritageImages']);
+Route::get('images/singleImage/{id}', [ImagesController::class, 'singleImage']);
+Route::get('videos/heritage-videos/{id}', [VideosController::class, 'heritageVideos']);
+    /** places */
+Route::get('province-list', [ProvincesController::class, 'provinceList']);
+Route::get('province-details/{id}', [ProvincesController::class, 'provDetails']);
+Route::get('municipalities/mun-list-province/{id}', [ MunicipalitiesController::class, 'munInProv']);
+Route::get('mun-in-province/{id}', [ MunicipalitiesController::class, 'munSwiper']);
+Route::get('mun-list', [ MunicipalitiesController::class, 'munList']);
+Route::get('mun-basic-list', [ MunicipalitiesController::class, 'munBasicDetails']);
+Route::get('mun-details/{id}', [ MunicipalitiesController::class, 'munDetails']);
+Route::get('mun-count/{id}', [MunicipalitiesController::class, 'counter']);    
+    /** Locations */
+Route::get('location/map', [LocationsController::class, 'location']);
 
 //Private Routes
 Route::middleware('auth:sanctum')->group(function () {    
@@ -34,8 +52,7 @@ Route::middleware('auth:sanctum')->group(function () {
     //** end of categories */
 
     //provinces
-    Route::resource('provinces', ProvincesController::class);
-    Route::get('province-list', [ProvincesController::class, 'provinceList']);
+    Route::resource('provinces', ProvincesController::class); 
     Route::post('update-province/{id}', [ProvincesController::class, 'updateProvince']);
     Route::get('province/count', [ProvincesController::class, 'counter']);
     Route::get('newProvince', [ProvincesController::class, 'newProvince']);
@@ -46,37 +63,27 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //Municipalities
     Route::resource('municipalities', MunicipalitiesController::class);
-    Route::get('municipalities/mun-list-province/{id}', [ MunicipalitiesController::class, 'munInProv']);
-    Route::get('mun-list', [ MunicipalitiesController::class, 'munList']);
-    Route::get('mun-details/{id}', [ MunicipalitiesController::class, 'munDetails']);
-    Route::post('update-municipality/{id}', [ MunicipalitiesController::class, 'updateMunicipality']);
-    Route::get('mun-count/{id}', [MunicipalitiesController::class, 'counter']);
+    Route::post('update-municipality/{id}', [ MunicipalitiesController::class, 'updateMunicipality']);    
 
-    //Locations
+    //locations
     Route::resource('locations', LocationsController::class);
-    Route::get('location/map', [LocationsController::class, 'location']);
 
     //Address
     Route::resource('addresses', AddressesController::class);
 
     //Heritage
-    Route::resource('heritages', HeritagesController::class);
-    Route::get('catalog', [HeritagesController::class, 'catalog']);    
-    Route::get('polariod', [HeritagesController::class, 'dashboard']);    
-    Route::get('catalog-details/{id}', [HeritagesController::class, 'catalogDetails']);    
+    Route::resource('heritages', HeritagesController::class); 
+    Route::get('polariod', [HeritagesController::class, 'dashboard']);     
     Route::get('edit-heritage/{id}', [HeritagesController::class, 'editHeritage']);    
     Route::get('heritage/count', [HeritagesController::class, 'counter']);    
     Route::get('heritage/search', [HeritagesController::class, 'search']);    
 
     //Image
     Route::resource('images', ImagesController::class);
-    Route::get('images/heritage-images/{id}', [ImagesController::class, 'heritageImages']);
-    Route::get('images/singleImage/{id}', [ImagesController::class, 'singleImage']);
     Route::get('image/count', [ImagesController::class, 'counter']);
 
     //Video
-    Route::resource('videos', VideosController::class);
-    Route::get('videos/heritage-videos/{id}', [VideosController::class, 'heritageVideos']);
+    Route::resource('videos', VideosController::class);    
     Route::get('video/count', [VideosController::class, 'counter']);
 
 
