@@ -103,7 +103,7 @@ class AuthController extends Controller
             ]);
         }
     }
-
+    
     public function updateName(Request $request, $id)
     {
         //validate the data received from request
