@@ -158,9 +158,9 @@ class HeritagesController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required',            
-            'user_id' => 'required',            
-            'category_id' => 'required',
+            'user_id' => 'required',     
             'address_id' => 'required',
+            'heritage_type' => 'required',
         ]);
 
         if($validator->fails())

@@ -122,7 +122,6 @@ class MunicipalitiesController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required',
-            'prov_id' => 'required'
         ]);
 
         if($validator->fails())
@@ -135,9 +134,7 @@ class MunicipalitiesController extends Controller
         else{
             $mun = new Municipality;
 
-            $mun->name = $request->input('name');
-            $mun->description = $request->input('description');
-            $mun->prov_id = $request->input('prov_id');            
+            $mun->name = $request->input('name');    
             if($request->hasFile('seal')){
                 $file = $request->file('seal');
                 $extension = $file->getClientOriginalExtension();
@@ -196,8 +193,6 @@ class MunicipalitiesController extends Controller
 
             if($mun){
                 $mun->name = $request->input('name');
-                $mun->description = $request->input('description');
-                $mun->prov_id = $request->input('prov_id');
 
                 if($request->hasFile('seal')){
                     //delete old seal

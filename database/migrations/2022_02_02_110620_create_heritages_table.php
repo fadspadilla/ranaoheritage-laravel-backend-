@@ -16,15 +16,12 @@ class CreateHeritagesTable extends Migration
         Schema::create('heritages', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->text('description')->nullable();
+            
+            $table->string('heritage_type');
+            $table->text('stories')->nullable();
 
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')
-                  ->onUpdate('cascade')
-                  ->onDelete('set null');
-
-            $table->unsignedBigInteger('category_id')->nullable();
-            $table->foreign('category_id')->references('id')->on('categories')
                   ->onUpdate('cascade')
                   ->onDelete('set null');
 
@@ -32,6 +29,7 @@ class CreateHeritagesTable extends Migration
             $table->foreign('address_id')->references('id')->on('addresses')
                   ->onUpdate('cascade')
                   ->onDelete('set null');
+
             $table->timestamps();
         });
     }

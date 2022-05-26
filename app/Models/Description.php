@@ -5,12 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Province extends Model
+class Description extends Model
 {
     protected $fillable = [
-        'name',
-        'description',
+        'heritage_id',
+        'title',
+        'content'
     ];
-    
+
     use HasFactory;
 }

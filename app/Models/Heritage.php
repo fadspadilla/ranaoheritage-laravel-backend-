@@ -8,11 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Heritage extends Model
 {
     protected $fillable = [
-        'name',
-        'description',
         'user_id',
-        'category_id',
         'address_id',
+        'name',
+        'heritage_type',
+        'stories'
     ];
 
     use HasFactory;

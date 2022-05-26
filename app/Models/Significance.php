@@ -5,12 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Municipality extends Model
+class Significance extends Model
 {
     protected $fillable = [
-        'name',
-        'seal'
+        'heritage_id',
+        'title',
+        'content'
     ];
-
+    
     use HasFactory;
 }
