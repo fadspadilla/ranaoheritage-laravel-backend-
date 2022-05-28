@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class immovable extends Model
+class Immovable extends Model
 {
     protected $fillable = [
         'heritage_id',
@@ -18,6 +18,6 @@ class immovable extends Model
         'jurisdiction',
         'legislation',
     ];
-
+    
     use HasFactory;
 }

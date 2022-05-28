@@ -17,15 +17,16 @@ class CreateNaturalsTable extends Migration
             $table->id();
 
             $table->string('category');
-            $table->string('classification')->nullable();
             $table->string('sub_category')->nullable();
+            $table->string('classification')->nullable();
             $table->text('area')->nullable();
             $table->string('ownership')->nullable();
             $table->string('other_name')->nullable();
             $table->string('scientific_name')->nullable();
-            $table->string('class_origin')->nullable();
             $table->string('habitat')->nullable();
             $table->string('site_collected')->nullable();
+            $table->string('visibility')->nullable();
+            $table->string('location')->nullable();
             $table->string('seasonability')->nullable();
             $table->string('special_note')->nullable();
             $table->string('legislation')->nullable();

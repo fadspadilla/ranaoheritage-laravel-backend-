@@ -15,6 +15,11 @@ use App\Http\Controllers\HeritagesController;
 use App\Http\Controllers\ImagesController;
 use App\Http\Controllers\VideosController;
 use App\Http\Controllers\DescriptionController;
+use App\Http\Controllers\ConservationController;
+use App\Http\Controllers\SignificanceController;
+use App\Http\Controllers\NaturalController;
+use App\Http\Controllers\ImmovableController;
+use App\Http\Controllers\MovableController;
 
 //Public Routes
 Route::post('register', [AuthController::class, 'register']);
@@ -60,7 +65,27 @@ Route::middleware('auth:sanctum')->group(function () {
     //description
     Route::post('descriptions', [DescriptionController::class, 'store']);
     Route::post('descriptions/{id}', [DescriptionController::class, 'update']);
+
+    //conservations
+    Route::post('conservations', [ConservationController::class, 'store']);
+    Route::post('conservations/{id}', [ConservationController::class, 'update']);
     
+    //significances
+    Route::post('significances', [SignificanceController::class, 'store']);
+    Route::post('significances/{id}', [SignificanceController::class, 'update']);
+
+    //natural heritage
+    Route::post('natural-heritage', [NaturalController::class, 'store']);
+    Route::post('natural-heritage/{id}', [NaturalController::class, 'update']);
+
+    //immovable heritage
+    Route::post('immovable-heritage', [ImmovableController::class, 'store']);
+    Route::post('immovable-heritage/{id}', [ImmovableController::class, 'update']);
+
+    //movable heritage
+    Route::post('movable-heritage', [MovableController::class, 'store']);
+    Route::post('movable-heritage/{id}', [MovableController::class, 'update']);
+
     //locations
     Route::resource('locations', LocationsController::class);
 
