@@ -39,9 +39,23 @@ class ImmovableController extends Controller
         }
     }
 
-    public function show(immovable $immovable)
+    public function show($id)
     {
-        //
+        $query = DB::table('immovables as imm') 
+                    ->where('imm.heritage_id', '=', $id)
+                    ->get();
+
+        if($query){
+            return response()->json([
+                'status' => 200,
+                'data' => $query,
+            ]);
+        }else {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Heritage Not Found',
+            ]);
+        }
     }
 
     public function update(Request $request, immovable $immovable)

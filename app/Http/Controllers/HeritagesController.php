@@ -45,6 +45,25 @@ class HeritagesController extends Controller
         }
     }
 
+    public function commonDetail($id){
+        $heritage = Heritage::find($id);
+
+        if($heritage)
+        {
+            return response()->json([
+                'status' => 200,
+                'heritage' => $heritage,
+            ]);
+        }
+        else
+        {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Heritage Not Found',
+            ]);
+        }
+    }
+
     public function search(Request $request){
         $query = DB::table('heritages')  
                 ->leftJoin('categories', 'heritages.category_id', '=', 'categories.id')          

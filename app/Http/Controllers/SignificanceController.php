@@ -70,4 +70,25 @@ class SignificanceController extends Controller
     {
         //
     }
+
+    // ****************************************
+    public function significanceHeritage($id)
+    {
+        $query = DB::table('significances as sig')         
+                    ->select('sig.title', 'sig.content')
+                    ->where('sig.heritage_id', '=', $id)
+                    ->get();
+
+        if($query){
+            return response()->json([
+                'status' => 200,
+                'sig' => $query,
+            ]);
+        }else {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Heritage Not Found',
+            ]);
+        }
+    }
 }

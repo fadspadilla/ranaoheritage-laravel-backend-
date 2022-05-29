@@ -25,10 +25,34 @@ use App\Http\Controllers\MovableController;
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);    
     /** heritages */
+Route::get('common-details/{id}', [HeritagesController::class, 'commonDetail']);   
 Route::get('heritage/search', [HeritagesController::class, 'search']);   
 Route::get('catalog', [HeritagesController::class, 'catalog']);   
-Route::get('catalog-details/{id}', [HeritagesController::class, 'catalogDetails']);   
-    /** multimedia */
+Route::get('catalog-details/{id}', [HeritagesController::class, 'catalogDetails']); 
+
+// ** SIGNIFICANCE */
+Route::get('significances-heritage/{id}', [SignificanceController::class, 'significanceHeritage']);
+  
+// ** CONSERVATIONS */
+Route::get('conservations-heritage/{id}', [ConservationController::class, 'conservationHeritage']);
+
+// ** DESCRIPTION */
+Route::get('descriptions-heritage/{id}', [DescriptionController::class, 'descriptionHeritage']);
+  
+// ** ADDRESS */
+Route::get('address-heritage/{id}', [AddressesController::class, 'getAddress']);
+
+// ** IMMOVABLE */
+Route::get('immovable-heritage/{id}', [ImmovableController::class, 'show']);
+
+// ** MOVABLE */
+Route::get('movable-heritage/{id}', [MovableController::class, 'show']);
+
+// ** NATURAL */
+Route::get('natural-heritage/{id}', [NaturalController::class, 'show']);
+
+
+/** multimedia */
 Route::get('images/heritage-images/{id}', [ImagesController::class, 'heritageImages']);
 Route::get('images/singleImage/{id}', [ImagesController::class, 'singleImage']);
 Route::get('videos/heritage-videos/{id}', [VideosController::class, 'heritageVideos']);

@@ -40,9 +40,23 @@ class NaturalController extends Controller
         }
     }
 
-    public function show(Natural $natural)
+    public function show($id)
     {
-        //
+        $query = DB::table('naturals as nat') 
+                    ->where('nat.heritage_id', '=', $id)
+                    ->get();
+
+        if($query){
+            return response()->json([
+                'status' => 200,
+                'data' => $query,
+            ]);
+        }else {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Heritage Not Found',
+            ]);
+        }
     }
 
     public function update(Request $request, $id)

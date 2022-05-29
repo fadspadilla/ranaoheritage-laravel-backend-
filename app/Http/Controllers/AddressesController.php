@@ -106,4 +106,26 @@ class AddressesController extends Controller
             ]);
         }
     }
+
+    //**************************************** */
+    public function getAddress($id){
+        $query = DB::table('addresses as add')       
+                    ->leftJoin('municipalities as mun', 'add.mun_id', '=', 'mun.id')
+                    ->leftJoin('locations as loc', 'add.loc_id', '=', 'loc.id')
+                    ->select( 'add.address', 'mun.name as municipality', 'loc.longitude', 'loc.latitude')
+                    ->where('add.id', '=', $id)
+                    ->get();
+
+        if($query){
+            return response()->json([
+                'status' => 200,
+                'address' => $query,
+            ]);
+        }else {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Heritage Not Found',
+            ]);
+        }
+    }
 }

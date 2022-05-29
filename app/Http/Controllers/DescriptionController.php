@@ -63,4 +63,25 @@ class DescriptionController extends Controller
             ]);
         }
     }
+
+    // ****************************************
+    public function descriptionHeritage($id)
+    {
+        $query = DB::table('descriptions as des')         
+                    ->select('des.title', 'des.content')
+                    ->where('des.heritage_id', '=', $id)
+                    ->get();
+
+        if($query){
+            return response()->json([
+                'status' => 200,
+                'des' => $query,
+            ]);
+        }else {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Heritage Not Found',
+            ]);
+        }
+    }
 }

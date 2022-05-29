@@ -42,7 +42,21 @@ class MovableController extends Controller
 
     public function show($id)
     {
-        //
+        $query = DB::table('movables as mov') 
+                    ->where('mov.heritage_id', '=', $id)
+                    ->get();
+
+        if($query){
+            return response()->json([
+                'status' => 200,
+                'data' => $query,
+            ]);
+        }else {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Heritage Not Found',
+            ]);
+        }
     }
 
     public function update(Request $request, $id)

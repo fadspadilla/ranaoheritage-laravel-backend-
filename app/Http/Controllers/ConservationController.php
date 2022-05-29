@@ -83,4 +83,25 @@ class ConservationController extends Controller
     {
         //
     }
+
+    // ****************************************
+    public function conservationHeritage($id)
+    {
+        $query = DB::table('conservations as con')         
+                    ->select('con.title', 'con.content')
+                    ->where('con.heritage_id', '=', $id)
+                    ->get();
+
+        if($query){
+            return response()->json([
+                'status' => 200,
+                'con' => $query,
+            ]);
+        }else {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Heritage Not Found',
+            ]);
+        }
+    }
 }
