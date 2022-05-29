@@ -28,7 +28,7 @@ class CreateHeritagesTable extends Migration
             $table->unsignedBigInteger('address_id')->nullable();
             $table->foreign('address_id')->references('id')->on('addresses')
                   ->onUpdate('cascade')
-                  ->onDelete('set null');
+                  ->onDelete('cascade');
 
             $table->timestamps();
         });

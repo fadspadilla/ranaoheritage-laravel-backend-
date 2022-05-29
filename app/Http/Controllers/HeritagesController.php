@@ -70,19 +70,17 @@ class HeritagesController extends Controller
 
     public function catalog(Request $request)
     {
-        $query = DB::table('heritages')  
-                ->leftJoin('categories', 'heritages.category_id', '=', 'categories.id')          
+        $query = DB::table('heritages')      
                 ->leftJoin('addresses', 'heritages.address_id', '=', 'addresses.id')
                 ->leftJoin('municipalities', 'addresses.mun_id', '=', 'municipalities.id')
-                ->leftJoin('provinces', 'municipalities.prov_id', '=', 'provinces.id')
-                ->select('heritages.id', 'heritages.name', 'municipalities.name as mun', 'provinces.name as prov', 'heritages.created_at', 'categories.id as categoryID');
+                ->select('heritages.id', 'heritages.name', 'heritages.heritage_type', 'heritages.address_id', 'municipalities.name as mun', 'addresses.address', 'heritages.created_at');
         
         if($search = $request->input('search')){
             $query->whereRaw("heritages.name LIKE '%". $search . "%'");
         }
 
         if($filter = $request->input('filter')){
-            $query->where('categories.id', $filter);
+            $query->where('heritages.heritage_type', $filter);
         }
 
         if($sort = $request->input('sort')){
