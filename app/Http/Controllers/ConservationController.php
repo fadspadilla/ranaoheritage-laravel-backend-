@@ -39,30 +39,33 @@ class ConservationController extends Controller
             ]);
         }
     }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Conservation  $conservation
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Conservation $conservation)
+    
+    public function show($id)
     {
-        //
+        return $query = DB::table('conservations as con')       
+                    ->where('con.heritage_id', '=', $id)
+                    ->get();
+
     }
 
     public function update(Request $request, $id)
     {
-        $query = Conservation::find($id);
+        $query = DB::table('conservations as con')       
+                    ->where('con.heritage_id', '=', $id)
+                    ->select('con.title');
 
         if($query){
+            if($title = $request->input('title')){
+                $query->whereRaw("con.title = '".$title."'");
+                
+                $query->update($request->all()); //by traversy
             
-            $query->update($request->all()); //by traversy
+                return response()->json([
+                    'status' => 200,
+                    'message' => 'Conservation Updated Successfully',
+                ]);
+            }
             
-            return response()->json([
-                'status' => 200,
-                'message' => 'Conservation Updated Successfully',
-            ]);
         }
         else
         {

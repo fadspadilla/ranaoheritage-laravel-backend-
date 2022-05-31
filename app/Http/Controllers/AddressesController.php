@@ -65,12 +65,14 @@ class AddressesController extends Controller
         }
     }
 
-    public function update(Request $request, $id)
+    public function updateAddress(Request $request, $id)
     {
-        $address = Address::find($id);
+        $query = DB::table('addresses as add')       
+                    ->where('add.id', '=', $id);
+                    
 
-        if($address){
-            $address->update($request->all()); //by traversy
+        if($query){
+            $query->update($request->all()); //by traversy
 
             return response()->json([
                 'status' => 200,

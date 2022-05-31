@@ -16,19 +16,16 @@ class LocationsController extends Controller
 
     public function location(Request $request)
     {
-        $query = DB::table('heritages as her')
-                    ->leftJoin('categories as cat', 'her.category_id', '=', 'cat.id')          
-                    ->leftJoin('addresses as add', 'her.address_id', '=', 'add.id')
+        $query = DB::table('heritages as her')       
+                    ->join('addresses as add', 'her.address_id', '=', 'add.id')
                     ->leftJoin('municipalities as mun', 'add.mun_id', '=', 'mun.id')
-                    ->leftJoin('provinces as prov', 'mun.prov_id', '=', 'prov.id')
                     ->leftJoin('locations as loc', 'add.loc_id', '=', 'loc.id')
                     ->leftJoin('icons', 'loc.icon_id', '=', 'icons.id')
-                    ->select('her.id', 'her.name as heritage_name', 'cat.name as category', 'loc.longitude', 'loc.latitude', 'icons.link');
+                    ->select('her.id', 'her.name as heritage_name', 'her.heritage_type', 'loc.longitude', 'loc.latitude', 'icons.link');
 
         if($search = $request->input('search')){
             $query->whereRaw("her.name LIKE '%". $search . "%'")
-                    ->orWhereRaw("mun.name LIKE '%". $search . "%'")
-                    ->orWhereRaw("prov.name LIKE '%". $search . "%'");
+                    ->orWhereRaw("mun.name LIKE '%". $search . "%'");
         }
 
         return $query->get();
@@ -81,9 +78,10 @@ class LocationsController extends Controller
         }
     }
 
-    public function update(Request $request, $id)
+    public function updateLocation(Request $request, $id)
     {
-        $location = Location::find($id);
+        $location = DB::table('locations as loc')       
+                        ->where('loc.id', '=', $id);
 
         if($location){
             $location->update($request->all()); //by traversy

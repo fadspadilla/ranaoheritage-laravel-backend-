@@ -39,23 +39,31 @@ class SignificanceController extends Controller
         }
     }
 
-    public function show(Significance $significance)
+    public function show($id)
     {
-        //
+        return $query = DB::table('significances as sig')       
+                    ->where('sig.heritage_id', '=', $id)
+                    ->get();
     }
 
     public function update(Request $request, $id)
     {
-        $query = Significance::find($id);
+        $query = DB::table('significances as sig')       
+                    ->where('sig.heritage_id', '=', $id)
+                    ->select('sig.title');
 
         if($query){
+            if($title = $request->input('title')){
+                $query->whereRaw("sig.title = '".$title."'");
+                
+                $query->update($request->all()); //by traversy
             
-            $query->update($request->all()); //by traversy
+                return response()->json([
+                    'status' => 200,
+                    'message' => 'Significance Updated Successfully',
+                ]);
+            }
             
-            return response()->json([
-                'status' => 200,
-                'message' => 'Significance Updated Successfully',
-            ]);
         }
         else
         {

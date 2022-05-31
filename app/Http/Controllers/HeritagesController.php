@@ -123,14 +123,14 @@ class HeritagesController extends Controller
     }
 
     public function editHeritage($id){
-        $query = DB::table('heritages as her')
-                    ->leftJoin('categories as cat', 'her.category_id', '=', 'cat.id')          
+        $query = DB::table('heritages as her')   
                     ->leftJoin('addresses as add', 'her.address_id', '=', 'add.id')
                     ->leftJoin('municipalities as mun', 'add.mun_id', '=', 'mun.id')
-                    ->leftJoin('provinces as prov', 'mun.prov_id', '=', 'prov.id')
                     ->leftJoin('locations as loc', 'add.loc_id', '=', 'loc.id')
                     ->leftJoin('icons', 'loc.icon_id', '=', 'icons.id')
-                    ->select('her.id as her_id', 'add.id as add_id', 'prov.id as prov_id',  'loc.id as loc_id')
+                    ->select('her.user_id', 'her.address_id', 'her.name as heritage_name', 
+                    'her.heritage_type', 'her.stories', 'add.mun_id', 'add.loc_id', 'add.address as address_name', 
+                    'loc.icon_id', 'loc.longitude', 'loc.latitude', 'mun.name as mun_name', )
                     ->where('her.id', '=', $id)
                     ->get();
 
@@ -148,13 +148,12 @@ class HeritagesController extends Controller
     }
 
     public function catalogDetails(Request $request, $id){
-        $query = DB::table('heritages as her')
-                    ->leftJoin('categories as cat', 'her.category_id', '=', 'cat.id')          
+        $query = DB::table('heritages as her')      
                     ->leftJoin('addresses as add', 'her.address_id', '=', 'add.id')
                     ->leftJoin('municipalities as mun', 'add.mun_id', '=', 'mun.id')
-                    ->leftJoin('provinces as prov', 'mun.prov_id', '=', 'prov.id')
                     ->leftJoin('locations as loc', 'add.loc_id', '=', 'loc.id')
-                    ->select('her.id', 'her.name as heritage_name', 'her.description', 'cat.name as category', 'add.address', 'mun.name as municipality', 'prov.name as province', 'loc.longitude', 'loc.latitude')
+                    ->select('her.id', 'her.name as heritage_name', 'her.description',  'add.address', 'add.id as address_id',
+                     'mun.name as municipality', 'loc.longitude', 'loc.latitude')
                     ->where('her.id', '=', $id)
                     ->get();
 

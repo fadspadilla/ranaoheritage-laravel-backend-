@@ -58,10 +58,11 @@ class ImmovableController extends Controller
         }
     }
 
-    public function update(Request $request, immovable $immovable)
+    public function update(Request $request, $id)
     {
-        $query = Immovable::find($id);
-
+        $query = DB::table('immovables as imm')       
+                    ->where('imm.id', '=', $id);
+                    
         if($query){
             
             $query->update($request->all()); //by traversy

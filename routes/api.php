@@ -32,12 +32,15 @@ Route::get('catalog-details/{id}', [HeritagesController::class, 'catalogDetails'
 
 // ** SIGNIFICANCE */
 Route::get('significances-heritage/{id}', [SignificanceController::class, 'significanceHeritage']);
+Route::get('significances/{id}', [SignificanceController::class, 'show']);
   
 // ** CONSERVATIONS */
 Route::get('conservations-heritage/{id}', [ConservationController::class, 'conservationHeritage']);
+Route::get('conservations/{id}', [ConservationController::class, 'show']);
 
 // ** DESCRIPTION */
 Route::get('descriptions-heritage/{id}', [DescriptionController::class, 'descriptionHeritage']);
+Route::get('descriptions/{id}', [DescriptionController::class, 'show']);
   
 // ** ADDRESS */
 Route::get('address-heritage/{id}', [AddressesController::class, 'getAddress']);
@@ -100,10 +103,12 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //natural heritage
     Route::post('natural-heritage', [NaturalController::class, 'store']);
+    Route::get('natural-heritage/{id}', [NaturalController::class, 'show']);
     Route::post('natural-heritage/{id}', [NaturalController::class, 'update']);
 
     //immovable heritage
     Route::post('immovable-heritage', [ImmovableController::class, 'store']);
+    Route::get('immovable-heritage/{id}', [ImmovableController::class, 'show']);
     Route::post('immovable-heritage/{id}', [ImmovableController::class, 'update']);
 
     //movable heritage
@@ -112,9 +117,11 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //locations
     Route::resource('locations', LocationsController::class);
+    Route::post('update-location/{id}', [LocationsController::class, 'updateLocation']);
 
     //Address
     Route::resource('addresses', AddressesController::class);
+    Route::post('update-address/{id}', [AddressesController::class, 'updateAddress']);
 
     //Heritage
     Route::resource('heritages', HeritagesController::class); 

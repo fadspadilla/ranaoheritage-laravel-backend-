@@ -34,26 +34,33 @@ class DescriptionController extends Controller
         }
 
     }
-/**
- * id param from description id
- */
-    public function show($id)// where id = description_id
-    {
-        //
-    }
 
+    public function show($id)
+    {
+        return $query = DB::table('descriptions as des')       
+                    ->where('des.heritage_id', '=', $id)
+                    ->get();
+
+    }
+    
     public function update(Request $request, $id)
     {
-        $query = Description::find($id);
+        $query = DB::table('descriptions as des')       
+                    ->where('des.heritage_id', '=', $id)
+                    ->select('des.title');
 
         if($query){
+            if($title = $request->input('title')){
+                $query->whereRaw("des.title = '".$title."'");
+                
+                $query->update($request->all()); //by traversy
             
-            $query->update($request->all()); //by traversy
+                return response()->json([
+                    'status' => 200,
+                    'message' => 'Description Updated Successfully',
+                ]);
+            }
             
-            return response()->json([
-                'status' => 200,
-                'message' => 'Description Updated Successfully',
-            ]);
         }
         else
         {
