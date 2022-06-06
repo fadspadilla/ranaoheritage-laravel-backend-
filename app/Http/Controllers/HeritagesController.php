@@ -65,17 +65,14 @@ class HeritagesController extends Controller
     }
 
     public function search(Request $request){
-        $query = DB::table('heritages')  
-                ->leftJoin('categories', 'heritages.category_id', '=', 'categories.id')          
+        $query = DB::table('heritages')      
                 ->leftJoin('addresses', 'heritages.address_id', '=', 'addresses.id')
                 ->leftJoin('municipalities', 'addresses.mun_id', '=', 'municipalities.id')
-                ->leftJoin('provinces', 'municipalities.prov_id', '=', 'provinces.id')
-                ->select('heritages.id', 'heritages.name', 'municipalities.name as mun', 'provinces.name as prov', 'heritages.created_at', 'categories.id as categoryID');
+                ->select('heritages.id', 'heritages.name', 'heritages.heritage_type', 'heritages.address_id', 'municipalities.name as mun', 'addresses.address', 'heritages.created_at');
         
         if($search = $request->input('search')){
             $query->whereRaw("heritages.name LIKE '%". $search . "%'")
-                  ->orWhereRaw("municipalities.name LIKE '%". $search . "%'")
-                  ->orWhereRaw("provinces.name LIKE '%". $search . "%'");
+                  ->orWhereRaw("municipalities.name LIKE '%". $search . "%'");                  
         }
 
         if($sort = $request->input('sort')){
@@ -112,12 +109,10 @@ class HeritagesController extends Controller
     }
 
     public function dashboard() {
-        $query = DB::table('heritages')  
-                ->leftJoin('categories', 'heritages.category_id', '=', 'categories.id')          
+        $query = DB::table('heritages')      
                 ->leftJoin('addresses', 'heritages.address_id', '=', 'addresses.id')
                 ->leftJoin('municipalities', 'addresses.mun_id', '=', 'municipalities.id')
-                ->leftJoin('provinces', 'municipalities.prov_id', '=', 'provinces.id')
-                ->select('heritages.id', 'heritages.name', 'municipalities.name as mun', 'provinces.name as prov', 'heritages.created_at', 'categories.id as categoryID');
+                ->select('heritages.id', 'heritages.name', 'municipalities.name as mun',  'heritages.created_at');
         
         return $query->orderBy('heritages.name', 'DESC')->take(2)->get();
     }

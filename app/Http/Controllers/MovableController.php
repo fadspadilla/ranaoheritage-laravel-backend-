@@ -15,6 +15,10 @@ class MovableController extends Controller
         //
     }
 
+    public function counter() {
+        return Movable::all()->count();
+    }
+
     public function store(Request $request)
     {
         //validate if my title
@@ -61,7 +65,8 @@ class MovableController extends Controller
 
     public function update(Request $request, $id)
     {
-        $query = Movable::find($id);
+        $query = DB::table('movables as mov')       
+                    ->where('mov.id', '=', $id);
 
         if($query){
             

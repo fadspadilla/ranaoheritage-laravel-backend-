@@ -47,12 +47,15 @@ Route::get('address-heritage/{id}', [AddressesController::class, 'getAddress']);
 
 // ** IMMOVABLE */
 Route::get('immovable-heritage/{id}', [ImmovableController::class, 'show']);
+Route::get('immovable/count', [ImmovableController::class, 'counter']);
 
 // ** MOVABLE */
 Route::get('movable-heritage/{id}', [MovableController::class, 'show']);
+Route::get('movable/count', [MovableController::class, 'counter']);
 
 // ** NATURAL */
 Route::get('natural-heritage/{id}', [NaturalController::class, 'show']);
+Route::get('natural/count', [NaturalController::class, 'counter']);
 
 
 /** multimedia */
@@ -108,11 +111,11 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //immovable heritage
     Route::post('immovable-heritage', [ImmovableController::class, 'store']);
-    Route::get('immovable-heritage/{id}', [ImmovableController::class, 'show']);
     Route::post('immovable-heritage/{id}', [ImmovableController::class, 'update']);
 
     //movable heritage
     Route::post('movable-heritage', [MovableController::class, 'store']);
+    //Route::get('movable-heritage/{id}', [MovableController::class, 'show']);
     Route::post('movable-heritage/{id}', [MovableController::class, 'update']);
 
     //locations

@@ -15,6 +15,10 @@ class NaturalController extends Controller
         //
     }
 
+    public function counter() {
+        return Natural::all()->count();
+    }
+
     public function store(Request $request)
     {
         //validate if my title

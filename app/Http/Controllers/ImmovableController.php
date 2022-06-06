@@ -14,6 +14,10 @@ class ImmovableController extends Controller
         //
     }
 
+    public function counter() {
+        return Immovable::all()->count();
+    }
+
     public function store(Request $request)
     {
         //validate if my title
