@@ -57,7 +57,6 @@ Route::get('movable/count', [MovableController::class, 'counter']);
 Route::get('natural-heritage/{id}', [NaturalController::class, 'show']);
 Route::get('natural/count', [NaturalController::class, 'counter']);
 
-
 /** multimedia */
 Route::get('images/heritage-images/{id}', [ImagesController::class, 'heritageImages']);
 Route::get('images/singleImage/{id}', [ImagesController::class, 'singleImage']);
@@ -71,7 +70,7 @@ Route::get('mun-count/{id}', [MunicipalitiesController::class, 'counter']);
     /** Locations */
 Route::get('location/map', [LocationsController::class, 'location']);
 
-//Private Routes
+// ******************************************** Private Routes ***********************************
 Route::middleware('auth:sanctum')->group(function () {    
     Route::post('logout', [AuthController::class, 'logout']);
     Route::get('auth-user', [AuthController::class, 'user']);
@@ -106,7 +105,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //natural heritage
     Route::post('natural-heritage', [NaturalController::class, 'store']);
-    Route::get('natural-heritage/{id}', [NaturalController::class, 'show']);
     Route::post('natural-heritage/{id}', [NaturalController::class, 'update']);
 
     //immovable heritage
