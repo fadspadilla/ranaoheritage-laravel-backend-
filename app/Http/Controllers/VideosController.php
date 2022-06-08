@@ -39,6 +39,7 @@ class VideosController extends Controller
         return response()->json([
             'status' => 200,
             'videos' => $videos,
+            'message' => 'Video Added Successfully',
         ]);
     }
 

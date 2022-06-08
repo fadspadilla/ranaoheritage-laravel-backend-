@@ -39,6 +39,7 @@ class ImagesController extends Controller
         return response()->json([
             'status' => 200,
             'images' => $images,
+            'message' => 'Image Added Successfully',
         ]);
     }
 
