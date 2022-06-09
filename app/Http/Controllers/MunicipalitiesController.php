@@ -49,7 +49,7 @@ class MunicipalitiesController extends Controller
                     ->orderBy('municipality', 'ASC');
 
         if($search = $request->input('search')){
-            $query->whereRaw("mun.name LIKE '%". $search . "%'");
+            $query->whereRaw("mun.name ILIKE '%". $search . "%'");
         }
 
         return $query->paginate(12);
@@ -81,7 +81,7 @@ class MunicipalitiesController extends Controller
         $query = DB::table('municipalities');
 
         if($search = $request->input('search')){
-            $query->whereRaw("name LIKE '%". $search . "%'");
+            $query->whereRaw("name ILIKE '%". $search . "%'");
         }
 
         if($filter = $request->input('filter')){
