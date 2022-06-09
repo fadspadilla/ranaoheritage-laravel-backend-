@@ -25,8 +25,8 @@ use App\Http\Controllers\MovableController;
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);    
     /** heritages */
-Route::get('common-details/{id}', [HeritagesController::class, 'commonDetail']);   
-Route::get('heritage/search', [HeritagesController::class, 'search']);   
+Route::get('common-details/{id}', [HeritagesController::class, 'commonDetail']);
+Route::get('heritage/search', [HeritagesController::class, 'search']);    
 Route::get('catalog', [HeritagesController::class, 'catalog']);   
 Route::get('catalog-details/{id}', [HeritagesController::class, 'catalogDetails']); 
 
@@ -129,7 +129,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('polariod', [HeritagesController::class, 'dashboard']);     
     Route::get('edit-heritage/{id}', [HeritagesController::class, 'editHeritage']);    
     Route::get('heritage/count', [HeritagesController::class, 'counter']);    
-    Route::get('heritage/search', [HeritagesController::class, 'search']);    
 
     //Image
     Route::resource('images', ImagesController::class);
