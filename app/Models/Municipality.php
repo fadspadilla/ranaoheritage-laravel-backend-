@@ -9,7 +9,8 @@ class Municipality extends Model
 {
     protected $fillable = [
         'name',
-        'seal'
+        'seal',
+        'cloud_id',
     ];
 
     use HasFactory;

@@ -17,6 +17,7 @@ class CreateMunicipalitiesTable extends Migration
             $table->id();            
             $table->string('name');              
             $table->string('seal')->nullable();
+            $table->string('cloud_id')->nullable();
             $table->timestamps();
         });
     }

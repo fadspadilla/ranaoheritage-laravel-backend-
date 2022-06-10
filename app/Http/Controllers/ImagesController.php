@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File; 
 use App\Models\Image;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
 class ImagesController extends Controller
 {
@@ -74,14 +75,15 @@ class ImagesController extends Controller
             if($request->hasFile('path')){   
                 $images = $request->file('path');
 
-                foreach($images as $file){                    
-                    $imgname = rand().'_'.time() .'.'.$file->getClientOriginalExtension();
-                    $file->move('uploads/images/', $imgname);
+                foreach($images as $img){ 
+                    //upload file in cloudinary                   
+                    $result = $img->storeOnCloudinary();
 
                     //store image file into directory and database
-                    $image = new Image();
+                    $image = new Image(); //create image
                     $image->heritage_id = $request->input('heritage_id');
-                    $image->path = 'uploads/images/'.$imgname;
+                    $image->path = $result->getSecurePath();
+                    $image->cloud_id = $result->getPublicId();
                     $image->save();
                 }
             }
@@ -118,8 +120,8 @@ class ImagesController extends Controller
         $image = Image::find($id);
 
         if($image){
-            File::delete($image->path);
-            Image::destroy($id);
+            Cloudinary::destroy($image->cloud_id); //delete image in cloudinary
+            Image::destroy($id); //delete image data in DB
 
             return response()->json([
                 'status' => 200,

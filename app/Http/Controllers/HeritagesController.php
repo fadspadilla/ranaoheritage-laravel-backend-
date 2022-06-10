@@ -71,8 +71,8 @@ class HeritagesController extends Controller
                 ->select('heritages.id', 'heritages.name', 'heritages.heritage_type', 'heritages.address_id', 'municipalities.name as mun', 'addresses.address', 'heritages.created_at');
         
         if($search = $request->input('search')){
-            $query->whereRaw("heritages.name ILIKE '%". $search . "%'")
-                  ->orWhereRaw("municipalities.name ILIKE '%". $search . "%'");                  
+            $query->whereRaw("heritages.name LIKE'%". $search . "%'")
+                  ->orWhereRaw("municipalities.name LIKE'%". $search . "%'");                  
         }
 
         if($sort = $request->input('sort')){
@@ -92,7 +92,7 @@ class HeritagesController extends Controller
                 ->select('heritages.id', 'heritages.name', 'heritages.heritage_type', 'heritages.address_id', 'municipalities.name as mun', 'addresses.address', 'heritages.created_at');
         
         if($search = $request->input('search')){
-            $query->whereRaw("heritages.name ILIKE '%". $search . "%'");
+            $query->whereRaw("heritages.name LIKE'%". $search . "%'");
         }
 
         if($filter = $request->input('filter')){
@@ -177,7 +177,7 @@ class HeritagesController extends Controller
         {
             return response()->json([
                 'status' => 400,
-                'errors' => $validator->messages(),
+                // 'errors' => $validator->messages(),
             ]);
         }
         else{

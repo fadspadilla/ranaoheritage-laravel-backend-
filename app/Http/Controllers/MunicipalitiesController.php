@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File; 
 use App\Models\Municipality;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
 
 class MunicipalitiesController extends Controller
@@ -49,7 +50,7 @@ class MunicipalitiesController extends Controller
                     ->orderBy('municipality', 'ASC');
 
         if($search = $request->input('search')){
-            $query->whereRaw("mun.name ILIKE '%". $search . "%'");
+            $query->whereRaw("mun.name LIKE'%". $search . "%'");
         }
 
         return $query->paginate(12);
@@ -81,7 +82,7 @@ class MunicipalitiesController extends Controller
         $query = DB::table('municipalities');
 
         if($search = $request->input('search')){
-            $query->whereRaw("name ILIKE '%". $search . "%'");
+            $query->whereRaw("name LIKE '%". $search . "%'");
         }
 
         if($filter = $request->input('filter')){
@@ -136,11 +137,10 @@ class MunicipalitiesController extends Controller
 
             $mun->name = $request->input('name');    
             if($request->hasFile('seal')){
-                $file = $request->file('seal');
-                $extension = $file->getClientOriginalExtension();
-                $filename = rand().'_'.time() .'.'.$extension;
-                $file->move('uploads/seals/', $filename);
-                $mun->seal = 'uploads/seals/'.$filename;
+                $result = $request->file('seal')->storeOnCloudinary();
+
+                $mun->seal = $result->getSecurePath();
+                $mun->cloud_id = $result->getPublicId();
             }
             $mun->save();
 
@@ -196,17 +196,13 @@ class MunicipalitiesController extends Controller
 
                 if($request->hasFile('seal')){
                     //delete old seal
-                    $path = $mun->seal;
-                    if(File::exists($path))
-                    {
-                        File::delete($path);
-                    }
+                    Cloudinary::destroy($mun->cloud_id);
 
-                    $file = $request->file('seal');
-                    $extension = $file->getClientOriginalExtension();
-                    $filename = rand().'_'.time() .'.'.$extension;
-                    $file->move('uploads/seals/', $filename);
-                    $mun->seal = 'uploads/seals/'.$filename;
+                    //update link and cloud_id
+                    $result = $request->file('seal')->storeOnCloudinary();
+                    //save new link and cloud_id
+                    $mun->seal = $result->getSecurePath();
+                    $mun->cloud_id = $result->getPublicId();
                 }
 
                 $mun->save();
@@ -227,11 +223,11 @@ class MunicipalitiesController extends Controller
 
     public function destroy($id)
     {
-        $municipality = Municipality::find($id);
+        $mun = Municipality::find($id);
 
-        if($municipality){
-            File::delete($municipality->seal);
-            Municipality::destroy($id);
+        if($mun){
+            Cloudinary::destroy($mun->cloud_id); //delete image in cloudinary
+            Municipality::destroy($id); //delete image data in DB
 
             return response()->json([
                 'status' => 200,

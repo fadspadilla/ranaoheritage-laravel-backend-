@@ -17,6 +17,7 @@ class CreateIconsTable extends Migration
             $table->id();            
             $table->string('name');
             $table->string('link')->nullable();
+            $table->string('cloud_id')->nullable();
             $table->timestamps();
         });
     }

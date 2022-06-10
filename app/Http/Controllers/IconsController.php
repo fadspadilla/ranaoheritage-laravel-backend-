@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\File; 
 use App\Models\Icon;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
 class IconsController extends Controller
 {
@@ -36,11 +37,10 @@ class IconsController extends Controller
             $icon = new Icon;
             $icon->name = $request->input('name');
             if($request->hasFile('link')){
-                $file = $request->file('link');
-                $extension = $file->getClientOriginalExtension();
-                $filename = rand().'_'.time() .'.'.$extension;
-                $file->move('uploads/icons/', $filename);
-                $icon->link = 'uploads/icons/'.$filename;
+                $result = $request->file('link')->storeOnCloudinary();
+
+                $icon->link = $result->getSecurePath();
+                $icon->cloud_id = $result->getPublicId();
             }
             $icon->save();
 
@@ -82,29 +82,23 @@ class IconsController extends Controller
         {
             return response()->json([
                 'status' => 422,
-                'errors' => $validator->messages(),
+                //'errors' => $validator->messages(),
             ]);
         }
         else{
-            $icon = Icon::find($id);
+            $icon = Icon::find($id); //search icon
 
-            if($icon){               
-
+            if($icon){      
                 $icon->name = $request->input('name');
                 if($request->hasFile('link')){
                     //delete Old icon
-                    $path = $icon->link;
-                    if(File::exists($path))
-                    {
-                        File::delete($path);
-                    }
+                    Cloudinary::destroy($icon->cloud_id); //delete image in cloudinary
                     
-
-                    $file = $request->file('link');
-                    $extension = $file->getClientOriginalExtension();
-                    $filename = rand().'_'.time() .'.'.$extension;
-                    $file->move('uploads/icons/', $filename);
-                    $icon->link = 'uploads/icons/'.$filename;
+                    //update link and cloud_id
+                    $result = $request->file('link')->storeOnCloudinary();
+                    //save new link and cloud_id
+                    $icon->link = $result->getSecurePath();
+                    $icon->cloud_id = $result->getPublicId();
                 }
                 $icon->update();
 
@@ -122,6 +116,8 @@ class IconsController extends Controller
         }
     }
 
+    
+
     /**
      * Remove the specified resource from storage.
      *
@@ -133,8 +129,8 @@ class IconsController extends Controller
         $icon = Icon::find($id);
 
         if($icon){
-            File::delete($icon->link);
-            Icon::destroy($id);
+            Cloudinary::destroy($icon->cloud_id); //delete image in cloudinary
+            Icon::destroy($id); //delete image data in DB
 
             return response()->json([
                 'status' => 200,

@@ -10,6 +10,7 @@ class Icon extends Model
     protected $fillable = [
         'name',
         'link',
+        'cloud_id',
     ];
 
     use HasFactory;

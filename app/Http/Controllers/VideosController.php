@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File; 
 use App\Models\Video;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
 class VideosController extends Controller
 {
@@ -62,14 +63,15 @@ class VideosController extends Controller
             if($request->hasFile('path')){   
                 $videos = $request->file('path');
 
-                foreach($videos as $file){                    
-                    $vidname = rand().'_'.time() .'.'.$file->getClientOriginalExtension();
-                    $file->move('uploads/videos/', $vidname);
+                foreach($videos as $vid){                    
+                    //upload file in cloudinary                   
+                    $result = $vid->storeOnCloudinary();
 
                     //store Video file into directory and database
                     $video = new Video();
                     $video->heritage_id = $request->input('heritage_id');
-                    $video->path = 'uploads/videos/'.$vidname;
+                    $video->path = $result->getSecurePath();
+                    $video->cloud_id = $result->getPublicId();
                     $video->save();
                 }
             }
@@ -106,8 +108,8 @@ class VideosController extends Controller
         $video = Video::find($id);
 
         if($video){
-            File::delete($video->path);
-            Video::destroy($id);
+            Cloudinary::destroy($video->cloud_id, ["resource_type" => "video"]); //delete image in cloudinary
+            Video::destroy($id); //delete image data in DB
 
             return response()->json([
                 'status' => 200,
