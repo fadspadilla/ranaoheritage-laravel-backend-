@@ -44,10 +44,48 @@ class VideosController extends Controller
         ]);
     }
 
+    // public function store(Request $request)
+    // {
+    //     $validator = Validator::make($request->all(), [
+    //         //'path.*' => 'required|mimes:mp4,3gp,ogx,oga,ogv,ogg,webm,ts,mkv',          
+    //         'heritage_id' => 'required',   
+    //     ]);
+
+    //     if($validator->fails())
+    //     {
+    //         return response()->json([
+    //             'status' => 422,
+    //             'errors' => $validator->messages(),
+    //         ]);
+    //     }
+    //     else{
+
+    //         if($request->hasFile('path')){   
+    //             $videos = $request->file('path');
+
+    //             foreach($videos as $vid){                    
+    //                 //upload file in cloudinary                   
+    //                 $result = $vid->storeOnCloudinary();
+
+    //                 //store Video file into directory and database
+    //                 $video = new Video();
+    //                 $video->heritage_id = $request->input('heritage_id');
+    //                 $video->path = $result->getSecurePath();
+    //                 $video->cloud_id = $result->getPublicId();
+    //                 $video->save();
+    //             }
+    //         }
+        
+    //         return response()->json([
+    //             'status' => 200,
+    //             'message' => 'Video Added Successfully',
+    //         ]);
+    //     } 
+    // }
+
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            //'path.*' => 'required|mimes:mp4,3gp,ogx,oga,ogv,ogg,webm,ts,mkv',          
+        $validator = Validator::make($request->all(), [        
             'heritage_id' => 'required',   
         ]);
 
@@ -60,21 +98,7 @@ class VideosController extends Controller
         }
         else{
 
-            if($request->hasFile('path')){   
-                $videos = $request->file('path');
-
-                foreach($videos as $vid){                    
-                    //upload file in cloudinary                   
-                    $result = $vid->storeOnCloudinary();
-
-                    //store Video file into directory and database
-                    $video = new Video();
-                    $video->heritage_id = $request->input('heritage_id');
-                    $video->path = $result->getSecurePath();
-                    $video->cloud_id = $result->getPublicId();
-                    $video->save();
-                }
-            }
+            Video::create($request->all()); //by traversy
         
             return response()->json([
                 'status' => 200,

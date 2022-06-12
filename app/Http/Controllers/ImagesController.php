@@ -57,12 +57,48 @@ class ImagesController extends Controller
         ]);
     }
 
-    public function store(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'path.*' => 'required|image|mimes:jpeg,jpg,bmp,gif,png,svg',            
+    // public function store(Request $request)
+    // {
+    //     $validator = Validator::make($request->all(), [
+    //         'path.*' => 'required|image|mimes:jpeg,jpg,bmp,gif,png,svg',            
+    //         'heritage_id' => 'required',   
+    //     ]);        
+
+    //     if($validator->fails())
+    //     {
+    //         return response()->json([
+    //             'status' => 422,
+    //             'errors' => $validator->messages(),
+    //         ]);
+    //     }
+    //     else{
+    //         if($request->hasFile('path')){   
+    //             $images = $request->file('path');
+
+    //             foreach($images as $img){ 
+    //                 //upload file in cloudinary                   
+    //                 $result = $img->storeOnCloudinary();
+
+    //                 //store image file into directory and database
+    //                 $image = new Image(); //create image
+    //                 $image->heritage_id = $request->input('heritage_id');
+    //                 $image->path = $result->getSecurePath();
+    //                 $image->cloud_id = $result->getPublicId();
+    //                 $image->save();
+    //             }
+    //         }
+        
+    //         return response()->json([
+    //             'status' => 200,
+    //             'message' => 'Image Added Successfully',
+    //         ]);
+    //     } 
+    // }
+
+    public function store(Request $request){
+        $validator = Validator::make($request->all(), [        
             'heritage_id' => 'required',   
-        ]);        
+        ]);
 
         if($validator->fails())
         {
@@ -72,21 +108,8 @@ class ImagesController extends Controller
             ]);
         }
         else{
-            if($request->hasFile('path')){   
-                $images = $request->file('path');
 
-                foreach($images as $img){ 
-                    //upload file in cloudinary                   
-                    $result = $img->storeOnCloudinary();
-
-                    //store image file into directory and database
-                    $image = new Image(); //create image
-                    $image->heritage_id = $request->input('heritage_id');
-                    $image->path = $result->getSecurePath();
-                    $image->cloud_id = $result->getPublicId();
-                    $image->save();
-                }
-            }
+            Image::create($request->all()); //by traversy
         
             return response()->json([
                 'status' => 200,
