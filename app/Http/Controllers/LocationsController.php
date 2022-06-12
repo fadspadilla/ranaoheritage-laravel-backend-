@@ -24,8 +24,8 @@ class LocationsController extends Controller
                     ->select('her.id', 'her.name as heritage_name', 'her.heritage_type', 'loc.longitude', 'loc.latitude', 'icons.link');
 
         if($search = $request->input('search')){
-            $query->whereRaw("her.name LIKE '%". $search . "%'")
-                    ->orWhereRaw("mun.name LIKE '%". $search . "%'");
+            $query->whereRaw("her.name ILIKE '%". $search . "%'")
+                    ->orWhereRaw("mun.name ILIKE '%". $search . "%'");
         }
 
         return $query->get();
