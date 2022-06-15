@@ -177,7 +177,6 @@ class MunicipalitiesController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'max:191',
-            'seal' => 'image'
         ]);
 
         if($validator->fails())
@@ -205,7 +204,7 @@ class MunicipalitiesController extends Controller
                     $mun->cloud_id = $result->getPublicId();
                 }
 
-                $mun->save();
+                $mun->update();
             
                 return response()->json([
                     'status' => 200,
