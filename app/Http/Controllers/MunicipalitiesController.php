@@ -183,7 +183,7 @@ class MunicipalitiesController extends Controller
         {
             return response()->json([
                 'status' => 422,
-                'errors' => $validator->messages(),
+                // 'errors' => $validator->messages(),
             ]); 
         }
         else{
@@ -192,10 +192,11 @@ class MunicipalitiesController extends Controller
 
             if($mun){
                 $mun->name = $request->input('name');
-
                 if($request->hasFile('seal')){
                     //delete old seal
-                    Cloudinary::destroy($mun->cloud_id);
+                    if($mun->cloud_id){
+                        Cloudinary::destroy($mun->cloud_id);
+                    }
 
                     //update link and cloud_id
                     $result = $request->file('seal')->storeOnCloudinary();
@@ -225,7 +226,9 @@ class MunicipalitiesController extends Controller
         $mun = Municipality::find($id);
 
         if($mun){
-            Cloudinary::destroy($mun->cloud_id); //delete image in cloudinary
+            if($mun->cloud_id){
+                Cloudinary::destroy($mun->cloud_id); //delete image in cloudinary
+            }
             Municipality::destroy($id); //delete image data in DB
 
             return response()->json([

@@ -75,7 +75,6 @@ class IconsController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'max:191',
-            'link' => 'image|mimes:png,svg|max:2048',
         ]);
 
         if($validator->fails())
@@ -92,8 +91,9 @@ class IconsController extends Controller
                 $icon->name = $request->input('name');
                 if($request->hasFile('link')){
                     //delete Old icon
-                    Cloudinary::destroy($icon->cloud_id); //delete image in cloudinary
-                    
+                    if($icon->cloud_id){
+                        Cloudinary::destroy($icon->cloud_id); //delete image in cloudinary
+                    }
                     //update link and cloud_id
                     $result = $request->file('link')->storeOnCloudinary();
                     //save new link and cloud_id
@@ -129,7 +129,9 @@ class IconsController extends Controller
         $icon = Icon::find($id);
 
         if($icon){
-            Cloudinary::destroy($icon->cloud_id); //delete image in cloudinary
+            if($icon->cloud_id){
+                Cloudinary::destroy($icon->cloud_id); //delete image in cloudinary
+            }
             Icon::destroy($id); //delete image data in DB
 
             return response()->json([
