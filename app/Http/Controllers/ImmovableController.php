@@ -45,8 +45,16 @@ class ImmovableController extends Controller
 
     public function show($id)
     {
-        $query = DB::table('immovables as imm') 
-                    ->where('imm.heritage_id', '=', $id)
+        $query = DB::table('heritages as her')  
+                    ->leftJoin('immovables as immov', 'her.id', '=', 'immov.heritage_id')
+                    ->leftJoin('addresses as add', 'her.address_id', '=', 'add.id')
+                    ->leftJoin('municipalities as mun', 'add.mun_id', '=', 'mun.id')
+                    ->leftJoin('locations as loc', 'add.loc_id', '=', 'loc.id')
+                    ->leftJoin('icons', 'loc.icon_id', '=', 'icons.id')
+                    ->select('immov.*', 'her.user_id', 'her.address_id', 'her.name as heritage_name', 
+                    'her.heritage_type', 'her.stories', 'add.mun_id', 'add.loc_id', 'add.address as address_name', 
+                    'loc.icon_id', 'loc.longitude', 'loc.latitude', 'mun.name as mun_name', )
+                    ->where('her.id', '=', $id)
                     ->get();
 
         if($query){
