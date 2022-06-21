@@ -62,6 +62,14 @@ class SignificanceController extends Controller
                     'status' => 200,
                     'message' => 'Significance Updated Successfully',
                 ]);
+            } else
+            {
+                $sig = Significance::create($request->all());
+                
+                return response()->json([
+                    'status' => 200,
+                    'message' => 'Significance Added Successfully',
+                ]);
             }
             
         }

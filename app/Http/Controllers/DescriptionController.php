@@ -59,6 +59,13 @@ class DescriptionController extends Controller
                     'status' => 200,
                     'message' => 'Description Updated Successfully',
                 ]);
+            }else{
+                $des = Description::create($request->all());
+            
+                return response()->json([
+                    'status' => 200,
+                    'message' => 'Description Added Successfully',
+                ]);
             }
             
         }

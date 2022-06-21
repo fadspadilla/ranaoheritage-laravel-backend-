@@ -64,6 +64,14 @@ class ConservationController extends Controller
                     'status' => 200,
                     'message' => 'Conservation Updated Successfully',
                 ]);
+            }else
+            {
+                $con = Conservation::create($request->all());
+                
+                return response()->json([
+                    'status' => 200,
+                    'message' => 'Conservation Added Successfully',
+                ]);
             }
             
         }
