@@ -46,6 +46,13 @@ class SignificanceController extends Controller
                     ->get();
     }
 
+    public function search(Request $request, $id){
+        return $query = DB::table('significances as sig')       
+                    ->where('sig.heritage_id', '=', $id)
+                    ->where('sig.title', '=', $request->input('title'))
+                    ->get();
+    }
+
     public function update(Request $request, $id)
     {
         $query = DB::table('significances as sig')       
@@ -60,27 +67,10 @@ class SignificanceController extends Controller
             
                 return response()->json([
                     'status' => 200,
-                    'message' => 'Significance Updated Successfully',
-                ]);
-            } else
-            {
-                $sig = Significance::create($request->all());
-                
-                return response()->json([
-                    'status' => 200,
-                    'message' => 'Significance Added Successfully',
+                    'message' => 'Updated Successfully!',
                 ]);
             }
             
-        }
-        else
-        {
-            $sig = Significance::create($request->all());
-            
-            return response()->json([
-                'status' => 200,
-                'message' => 'Significance Added Successfully',
-            ]);
         }
     }
 

@@ -94,14 +94,17 @@ Route::middleware('auth:sanctum')->group(function () {
     //description
     Route::post('descriptions', [DescriptionController::class, 'store']);
     Route::post('descriptions/{id}', [DescriptionController::class, 'update']);
+    Route::get('search-descriptions/{id}', [DescriptionController::class, 'search']);
 
     //conservations
     Route::post('conservations', [ConservationController::class, 'store']);
     Route::post('conservations/{id}', [ConservationController::class, 'update']);
-    
+    Route::get('search-conservations/{id}', [ConservationController::class, 'search']);
+
     //significances
     Route::post('significances', [SignificanceController::class, 'store']);
     Route::post('significances/{id}', [SignificanceController::class, 'update']);
+    Route::get('search-significances/{id}', [SignificanceController::class, 'search']);
 
     //natural heritage
     Route::post('natural-heritage', [NaturalController::class, 'store']);

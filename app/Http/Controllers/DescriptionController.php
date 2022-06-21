@@ -42,6 +42,13 @@ class DescriptionController extends Controller
                     ->get();
 
     }
+
+    public function search(Request $request, $id){
+        return $query = DB::table('descriptions as des')       
+                    ->where('des.heritage_id', '=', $id)
+                    ->where('des.title', '=', $request->input('title'))
+                    ->get();
+    }
     
     public function update(Request $request, $id)
     {
@@ -53,30 +60,15 @@ class DescriptionController extends Controller
             if($title = $request->input('title')){
                 $query->whereRaw("des.title = '".$title."'");
                 
-                $query->update($request->all()); //by traversy
+                if($query){
+                    $query->update($request->all()); //by traversy
             
-                return response()->json([
-                    'status' => 200,
-                    'message' => 'Description Updated Successfully',
-                ]);
-            }else{
-                $des = Description::create($request->all());
-            
-                return response()->json([
-                    'status' => 200,
-                    'message' => 'Description Added Successfully',
-                ]);
-            }
-            
-        }
-        else
-        {
-            $des = Description::create($request->all());
-            
-            return response()->json([
-                'status' => 200,
-                'message' => 'Description Added Successfully',
-            ]);
+                    return response()->json([
+                        'status' => 200,
+                        'message' => 'Successfully Updated!',
+                    ]);
+                }
+            }            
         }
     }
 

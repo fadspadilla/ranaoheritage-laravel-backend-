@@ -48,6 +48,13 @@ class ConservationController extends Controller
 
     }
 
+    public function search(Request $request, $id){
+        return $query = DB::table('conservations as con')       
+                    ->where('con.heritage_id', '=', $id)
+                    ->where('con.title', '=', $request->input('title'))
+                    ->get();
+    }
+
     public function update(Request $request, $id)
     {
         $query = DB::table('conservations as con')       
@@ -62,27 +69,9 @@ class ConservationController extends Controller
             
                 return response()->json([
                     'status' => 200,
-                    'message' => 'Conservation Updated Successfully',
+                    'message' => 'Updated Successfully!',
                 ]);
-            }else
-            {
-                $con = Conservation::create($request->all());
-                
-                return response()->json([
-                    'status' => 200,
-                    'message' => 'Conservation Added Successfully',
-                ]);
-            }
-            
-        }
-        else
-        {
-            $con = Conservation::create($request->all());
-            
-            return response()->json([
-                'status' => 200,
-                'message' => 'Conservation Added Successfully',
-            ]);
+            }           
         }
     }
 
