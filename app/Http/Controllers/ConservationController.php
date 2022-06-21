@@ -69,9 +69,11 @@ class ConservationController extends Controller
         }
         else
         {
+            $con = Conservation::create($request->all());
+            
             return response()->json([
-                'status' => 404,
-                'message' => 'Heritage Not Found',
+                'status' => 200,
+                'message' => 'Conservation Added Successfully',
             ]);
         }
     }

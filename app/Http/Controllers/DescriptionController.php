@@ -64,9 +64,11 @@ class DescriptionController extends Controller
         }
         else
         {
+            $des = Description::create($request->all());
+            
             return response()->json([
-                'status' => 404,
-                'message' => 'Heritage Not Found',
+                'status' => 200,
+                'message' => 'Description Added Successfully',
             ]);
         }
     }

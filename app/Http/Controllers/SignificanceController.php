@@ -67,9 +67,11 @@ class SignificanceController extends Controller
         }
         else
         {
+            $sig = Significance::create($request->all());
+            
             return response()->json([
-                'status' => 404,
-                'message' => 'Heritage Not Found',
+                'status' => 200,
+                'message' => 'Significance Added Successfully',
             ]);
         }
     }
