@@ -21,7 +21,7 @@ class LocationsController extends Controller
                     ->leftJoin('municipalities as mun', 'add.mun_id', '=', 'mun.id')
                     ->leftJoin('locations as loc', 'add.loc_id', '=', 'loc.id')
                     ->leftJoin('icons', 'loc.icon_id', '=', 'icons.id')
-                    ->select('her.id', 'her.name as heritage_name', 'her.heritage_type', 'loc.longitude', 'loc.latitude', 'icons.link');
+                    ->select('her.id', 'her.name as heritage_name', 'her.heritage_type', 'add.address', 'mun.name as municipality' ,'loc.longitude', 'loc.latitude', 'icons.link');
 
         if($search = $request->input('search')){
             $query->whereRaw("her.name ILIKE '%". $search . "%'")
