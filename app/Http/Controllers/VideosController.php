@@ -132,8 +132,7 @@ class VideosController extends Controller
         $video = Video::find($id);
 
         if($video){
-            Cloudinary::destroy($video->cloud_id, ["resource_type" => "video"]); //delete image in cloudinary
-            Video::destroy($id); //delete image data in DB
+           Video::destroy($id); //delete video data in DB
 
             return response()->json([
                 'status' => 200,

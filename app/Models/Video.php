@@ -9,7 +9,6 @@ class Video extends Model
 {
     protected $fillable = [
         'path',
-        'cloud_id',
         'heritage_id',
     ];
     
