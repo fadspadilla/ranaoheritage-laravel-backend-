@@ -1,0 +1,11 @@
+version: 1
+services:
+  - name: your-service-name
+    type: web
+    buildCommand: ""
+    env:
+      - key: WEB_SERVER
+        value: "apache"
+    routes:
+      - path: /
+        rewritePath: /public
