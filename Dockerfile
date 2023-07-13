@@ -1,37 +1,35 @@
-# Use the official PHP image as the base image
-FROM php:7.4-apache
-
-# Install Composer
-RUN apt-get update && apt-get install -y \
-    curl \
-    && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-
-# Install required dependencies
-RUN apt-get update && \
-    apt-get install -y \
-        libzip-dev \
-        zip \
-        unzip \
-        git
-
-# Enable necessary PHP extensions
-RUN docker-php-ext-install pdo_mysql zip
-
-# Copy the Laravel application files to the container
-COPY . /var/www/html
+# Use a PHP base image
+FROM php:8.0-apache
 
 # Set the working directory
 WORKDIR /var/www/html
 
-# Install dependencies and run any necessary setup commands
+# Install required dependencies
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        curl \
+        unzip \
+        libonig-dev \
+        libzip-dev \
+        zip
+
+# Enable required Apache modules
+RUN a2enmod rewrite
+
+# Install Composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+# Copy Laravel files to the working directory
+COPY . .
+
+# Install project dependencies
 RUN composer install --optimize-autoloader --no-dev
-RUN php artisan key:generate
 
-# Set the appropriate permissions
-RUN chown -R www-data:www-data storage bootstrap/cache
+# Set the ownership of the Laravel files to the Apache user
+RUN chown -R www-data:www-data .
 
-# Expose port 80
+# Expose the Apache port
 EXPOSE 80
 
-# Start the Apache server
+# Start Apache service
 CMD ["apache2-foreground"]
