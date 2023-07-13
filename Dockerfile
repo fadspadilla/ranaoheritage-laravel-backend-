@@ -24,6 +24,7 @@ COPY . .
 
 # Install project dependencies
 RUN composer install --optimize-autoloader --no-dev
+RUN php artisan key:generate
 
 # Set the ownership of the Laravel files to the Apache user
 RUN chown -R www-data:www-data .
