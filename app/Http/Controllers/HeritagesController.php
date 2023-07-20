@@ -10,12 +10,12 @@ use App\Models\Heritage;
 class HeritagesController extends Controller
 {
     public function index()
-    {        
+    {
         $heritage = DB::table('heritages')
                 ->join('categories', 'categories.id', '=', 'heritages.category_id')
                 ->selectRaw('heritages.name as heritage_name, categories.name as category_name')
                 ->get();
-                
+
         return response()->json([
             'status' => 200,
             'heritage' => $heritage,
@@ -65,14 +65,14 @@ class HeritagesController extends Controller
     }
 
     public function search(Request $request){
-        $query = DB::table('heritages')      
+        $query = DB::table('heritages')
                 ->leftJoin('addresses', 'heritages.address_id', '=', 'addresses.id')
                 ->leftJoin('municipalities', 'addresses.mun_id', '=', 'municipalities.id')
                 ->select('heritages.id', 'heritages.name', 'heritages.heritage_type', 'heritages.address_id', 'municipalities.name as mun', 'addresses.address', 'heritages.created_at');
-        
+
         if($search = $request->input('search')){
-            $query->whereRaw("heritages.name ILIKE'%". $search . "%'")
-                  ->orWhereRaw("municipalities.name ILIKE'%". $search . "%'");                  
+            $query->whereRaw("heritages.name LIKE'%". $search . "%'")
+                  ->orWhereRaw("municipalities.name LIKE'%". $search . "%'");
         }
 
         if($sort = $request->input('sort')){
@@ -81,18 +81,18 @@ class HeritagesController extends Controller
             $query->orderBy('heritages.name', 'ASC');
         }
 
-        return $query->paginate(12);                
+        return $query->paginate(12);
     }
 
     public function catalog(Request $request)
     {
-        $query = DB::table('heritages')      
+        $query = DB::table('heritages')
                 ->leftJoin('addresses', 'heritages.address_id', '=', 'addresses.id')
                 ->leftJoin('municipalities', 'addresses.mun_id', '=', 'municipalities.id')
                 ->select('heritages.id', 'heritages.name', 'heritages.heritage_type', 'heritages.address_id', 'municipalities.name as mun', 'addresses.address', 'heritages.created_at');
-        
+
         if($search = $request->input('search')){
-            $query->whereRaw("heritages.name ILIKE'%". $search . "%'");
+            $query->whereRaw("heritages.name LIKE'%". $search . "%'");
         }
 
         if($filter = $request->input('filter')){
@@ -109,22 +109,22 @@ class HeritagesController extends Controller
     }
 
     public function dashboard() {
-        $query = DB::table('heritages')      
+        $query = DB::table('heritages')
                 ->leftJoin('addresses', 'heritages.address_id', '=', 'addresses.id')
                 ->leftJoin('municipalities', 'addresses.mun_id', '=', 'municipalities.id')
                 ->select('heritages.id', 'heritages.name', 'municipalities.name as mun',  'heritages.created_at');
-        
+
         return $query->orderBy('heritages.name', 'DESC')->take(2)->get();
     }
 
     public function editHeritage($id){
-        $query = DB::table('heritages as her')   
+        $query = DB::table('heritages as her')
                     ->leftJoin('addresses as add', 'her.address_id', '=', 'add.id')
                     ->leftJoin('municipalities as mun', 'add.mun_id', '=', 'mun.id')
                     ->leftJoin('locations as loc', 'add.loc_id', '=', 'loc.id')
                     ->leftJoin('icons', 'loc.icon_id', '=', 'icons.id')
-                    ->select('her.user_id', 'her.address_id', 'her.name as heritage_name', 
-                    'her.heritage_type', 'her.stories', 'add.mun_id', 'add.loc_id', 'add.address as address_name', 
+                    ->select('her.user_id', 'her.address_id', 'her.name as heritage_name',
+                    'her.heritage_type', 'her.stories', 'add.mun_id', 'add.loc_id', 'add.address as address_name',
                     'loc.icon_id', 'loc.longitude', 'loc.latitude', 'mun.name as mun_name', )
                     ->where('her.id', '=', $id)
                     ->get();
@@ -143,7 +143,7 @@ class HeritagesController extends Controller
     }
 
     public function catalogDetails(Request $request, $id){
-        $query = DB::table('heritages as her')      
+        $query = DB::table('heritages as her')
                     ->leftJoin('addresses as add', 'her.address_id', '=', 'add.id')
                     ->leftJoin('municipalities as mun', 'add.mun_id', '=', 'mun.id')
                     ->leftJoin('locations as loc', 'add.loc_id', '=', 'loc.id')
@@ -168,8 +168,8 @@ class HeritagesController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required',            
-            'user_id' => 'required',     
+            'name' => 'required',
+            'user_id' => 'required',
             'heritage_type' => 'required',
         ]);
 
@@ -183,13 +183,13 @@ class HeritagesController extends Controller
         else{
 
             $heritage = Heritage::create($request->all()); //by traversy
-        
+
             return response()->json([
                 'status' => 200,
                 'heritage' => $heritage,
                 'message' => 'Heritage Added Successfully',
             ]);
-        } 
+        }
     }
 
     public function update(Request $request, $id)
@@ -198,7 +198,7 @@ class HeritagesController extends Controller
 
         if($heritage){
             $heritage->update($request->all()); //by traversy
-            
+
             return response()->json([
                 'status' => 200,
                 'message' => 'Heritage Updated Successfully',

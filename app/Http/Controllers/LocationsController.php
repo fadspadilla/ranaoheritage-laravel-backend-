@@ -16,7 +16,7 @@ class LocationsController extends Controller
 
     public function location(Request $request)
     {
-        $query = DB::table('heritages as her')       
+        $query = DB::table('heritages as her')
                     ->join('addresses as add', 'her.address_id', '=', 'add.id')
                     ->leftJoin('municipalities as mun', 'add.mun_id', '=', 'mun.id')
                     ->leftJoin('locations as loc', 'add.loc_id', '=', 'loc.id')
@@ -24,8 +24,8 @@ class LocationsController extends Controller
                     ->select('her.id', 'her.name as heritage_name', 'her.heritage_type', 'add.address', 'mun.name as municipality' ,'loc.longitude', 'loc.latitude', 'icons.link');
 
         if($search = $request->input('search')){
-            $query->whereRaw("her.name ILIKE '%". $search . "%'")
-                    ->orWhereRaw("mun.name ILIKE '%". $search . "%'");
+            $query->whereRaw("her.name LIKE '%". $search . "%'")
+                    ->orWhereRaw("mun.name LIKE '%". $search . "%'");
         }
 
         return $query->get();
@@ -34,8 +34,8 @@ class LocationsController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'longitude' => 'required',            
-            'latitude' => 'required',            
+            'longitude' => 'required',
+            'latitude' => 'required',
             'icon_id' => 'required'
         ]);
 
@@ -49,13 +49,13 @@ class LocationsController extends Controller
         else{
 
             $location = Location::create($request->all()); //by traversy
-        
+
             return response()->json([
                 'status' => 200,
                 'location' => $location,
                 'message' => 'Location Added Successfully',
             ]);
-        }  
+        }
     }
 
     public function show($id)
@@ -80,7 +80,7 @@ class LocationsController extends Controller
 
     public function updateLocation(Request $request, $id)
     {
-        $location = DB::table('locations as loc')       
+        $location = DB::table('locations as loc')
                         ->where('loc.id', '=', $id);
 
         if($location){

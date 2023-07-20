@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\File; 
+use Illuminate\Support\Facades\File;
 use App\Models\Municipality;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
@@ -13,12 +13,12 @@ use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 class MunicipalitiesController extends Controller
 {
     public function index()
-    {  
+    {
         return Municipality::all();
     }
 
     public function counter($id) {
-        return $query = DB::table('municipalities')        
+        return $query = DB::table('municipalities')
                     ->where('prov_id', '=', $id)
                     ->count();
     }
@@ -26,8 +26,8 @@ class MunicipalitiesController extends Controller
     public function munDetails($id) {
         $query = DB::table('municipalities as mun')
                     ->leftJoin('provinces as prov', 'mun.prov_id', '=', 'prov.id')
-                    ->select('mun.id', 'mun.name as municipality', 'mun.seal', 'mun.description', 'prov.name as province')          
-                    ->where('mun.id', '=', $id)              
+                    ->select('mun.id', 'mun.name as municipality', 'mun.seal', 'mun.description', 'prov.name as province')
+                    ->where('mun.id', '=', $id)
                     ->get();
 
         if($query){
@@ -46,11 +46,11 @@ class MunicipalitiesController extends Controller
     public function munBasicDetails(Request $request) {
         $query = DB::table('municipalities as mun')
                     ->leftJoin('provinces as prov', 'mun.prov_id', '=', 'prov.id')
-                    ->select('mun.id', 'mun.name as municipality', 'mun.seal', 'prov.name as province') 
+                    ->select('mun.id', 'mun.name as municipality', 'mun.seal', 'prov.name as province')
                     ->orderBy('municipality', 'ASC');
 
         if($search = $request->input('search')){
-            $query->whereRaw("mun.name ILIKE'%". $search . "%'");
+            $query->whereRaw("mun.name LIKE'%". $search . "%'");
         }
 
         return $query->paginate(12);
@@ -59,11 +59,11 @@ class MunicipalitiesController extends Controller
     public function munSwiper($id) {
         $query = DB::table('municipalities as mun')
                     ->leftJoin('provinces as prov', 'mun.prov_id', '=', 'prov.id')
-                    ->select('mun.id', 'mun.name as municipality', 'mun.seal', 'prov.name as province') 
-                    ->where('mun.prov_id', '=', $id)    
+                    ->select('mun.id', 'mun.name as municipality', 'mun.seal', 'prov.name as province')
+                    ->where('mun.prov_id', '=', $id)
                     ->get();
 
-                    
+
         if($query){
             return response()->json([
                 'status' => 200,
@@ -82,7 +82,7 @@ class MunicipalitiesController extends Controller
         $query = DB::table('municipalities');
 
         if($search = $request->input('search')){
-            $query->whereRaw("name ILIKE '%". $search . "%'");
+            $query->whereRaw("name LIKE '%". $search . "%'");
         }
 
         if($filter = $request->input('filter')){
@@ -95,13 +95,13 @@ class MunicipalitiesController extends Controller
             $query->orderBy('name', 'ASC');
         }
 
-        return $query->paginate(12);        
+        return $query->paginate(12);
     }
 
     // returns municipalities in a province
     public function munInProv($id)
     {
-        $municipality = Municipality::where('prov_id', $id)->get();        
+        $municipality = Municipality::where('prov_id', $id)->get();
 
         if($municipality)
         {
@@ -135,7 +135,7 @@ class MunicipalitiesController extends Controller
         else{
             $mun = new Municipality;
 
-            $mun->name = $request->input('name');    
+            $mun->name = $request->input('name');
             if($request->hasFile('seal')){
                 $result = $request->file('seal')->storeOnCloudinary();
 
@@ -144,13 +144,13 @@ class MunicipalitiesController extends Controller
             }
             $mun->save();
 
-            
+
             return response()->json([
                 'status' => 200,
                 'municipality' => $mun,
                 'message' => 'Municipality Added Successfully',
             ]);
-        }   
+        }
     }
 
     public function show($id)
@@ -184,7 +184,7 @@ class MunicipalitiesController extends Controller
             return response()->json([
                 'status' => 422,
                 // 'errors' => $validator->messages(),
-            ]); 
+            ]);
         }
         else{
 
@@ -206,7 +206,7 @@ class MunicipalitiesController extends Controller
                 }
 
                 $mun->update();
-            
+
                 return response()->json([
                     'status' => 200,
                     'message' => 'Municipality Updated Successfully',
@@ -216,9 +216,9 @@ class MunicipalitiesController extends Controller
                 return response()->json([
                     'status' => 404,
                     'message' => 'Not Found',
-                ]); 
-            }            
-        } 
+                ]);
+            }
+        }
     }
 
     public function destroy($id)
